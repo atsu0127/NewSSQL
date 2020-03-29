@@ -1,0 +1,63 @@
+                      3225231938a:2:{i:0;s:532:"
+				GENERATE HTML {
+				       [null((desc1)s.num_of_models)!
+				        s.num_of_models||'モデルベース'@{height=40, font-size=20, color=#6699FF, padding=2, align=center, valign=bottom}!
+				       [ {plink(s.id||':  '||s.d@{height=30, font-size=13, padding=2, align=center}, './r_details.html', s.id)!
+				          image(s.name||'/r_all4_1w.png?20190711182623', './r')
+				         }@{padding=8, align=center}! null((asc2)s.id)
+				       ],3! !
+				       ' '@{height=40}
+				       ]!
+				      } FROM stock_model s;
+			";i:1;s:1558:"<script>
+	var pageNum = 0;
+	var itemCount = 0;
+	var g1PaginationRowNum = [];
+	var g1PaginationColumnNum = [];
+	var g2PaginationRowNum = [];
+	var g2PaginationColumnNum = [];
+	var g1RetNum = [];
+	var g2RetNum = [];
+	var xmlFileName = [];
+	g1PaginationRowNum[0]=0;
+
+	g1PaginationColumnNum[0]=0;
+
+	g2PaginationRowNum[0]=0;
+
+	g2PaginationColumnNum[0]=0;
+
+	g1RetNum[0]=3;
+
+	g2RetNum[0]=0;
+
+	xmlFileName[0]="/srv/http/htdocs/ssql/goto/essql/aii_dev/GeneratedXML/ssql/ssqlResult1.xml";
+
+	var css=document.createElement("link");
+	css.setAttribute("rel", "stylesheet");
+	css.setAttribute("type", "text/css");
+	css.setAttribute("href", "jscss//ssql/ssqlResult1.css");
+	document.getElementsByTagName("head")[0].appendChild(css);
+
+	var pagecss=document.createElement("link");
+	pagecss.setAttribute("rel", "stylesheet");
+	pagecss.setAttribute("type", "text/css");
+	pagecss.setAttribute("href", "jscss/simplePagination.css");
+	document.getElementsByTagName("head")[0].appendChild(pagecss);
+
+	var jq=document.createElement("script");
+	jq.setAttribute("src","jscss/jquery.js");
+	document.getElementsByTagName("head")[0].appendChild(jq);
+
+	var pagejs=document.createElement("script");
+	pagejs.setAttribute("src","jscss/jquery.simplePagination.js");
+	document.getElementsByTagName("head")[0].appendChild(pagejs);
+
+	var make_table=document.createElement("script");
+	make_table.setAttribute("src","jscss/makeTable.js");
+	make_table.setAttribute("type","text/javascript");
+	document.getElementsByTagName("head")[0].appendChild(make_table);
+</script>
+<div id="ssqlResult1">
+</div>
+";}

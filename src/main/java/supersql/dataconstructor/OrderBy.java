@@ -2,6 +2,7 @@ package supersql.dataconstructor;
 
 import java.util.Arrays;
 
+import supersql.common.GlobalEnv;
 import supersql.common.Log;
 import supersql.extendclass.ExtList;
 import supersql.parser.Preprocessor;
@@ -38,7 +39,6 @@ public class OrderBy {
 			for (int j = i + 1; j < data_info.size(); j++) {
 
 				y = data_info.get(j).get(key);
-
 				/* ascending order */
 				if (way.equalsIgnoreCase("asc")) {
 					/* attribute whose value is null */
@@ -267,8 +267,8 @@ public class OrderBy {
 
 	private boolean isAggregate(String target) {
 
-		for (int i = 0; i < Preprocessor.getAggregateList().size(); i++) {
-			if (target.equals(Preprocessor.getAggregateList().get(i).toString().substring(0, 1))) {
+		for (int i = 0; i < GlobalEnv.aggListTmp.size(); i++) {
+			if (Integer.parseInt(target) == Integer.parseInt(GlobalEnv.aggListTmp.get(i).toString().split(" ")[0])) {
 				return true;
 			}
 		}

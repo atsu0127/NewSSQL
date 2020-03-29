@@ -1,0 +1,51 @@
+
+<!-- saved from url=(0041)https://grp15.ias.rakuten.co.jp/gw.js?v=2 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body><!--  Product page tag ---->
+<script async="true" type="text/javascript" src="./event(1)" data-owner="criteo-tag"></script><script type="text/javascript" src="./ld.js" async="true"></script>
+<script type="text/javascript" src="./common.js"> </script>
+<script type="text/javascript">
+ 
+ 
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+var user_segment_param = '';
+var SiteType = '';
+var user_seg = '';
+var segId = grp15ULD(["dummy","f88","f02","f99","f03"]);
+ 
+if ('pc' == 'pc') {
+    user_segment_param = '1';
+    SiteType = 'd';
+} else {
+    user_segment_param = '2';
+    SiteType = 'm';
+}
+ 
+if (getParameterByName("icm_disp_cto_id", unescape("https%3A%2F%2Fwww.rakuten.co.jp%2F")) == "140819") {
+    user_seg = "affinity";
+} else {
+    user_seg = ""
+}
+ 
+window.criteo_q = window.criteo_q || [];
+window.criteo_q.push({
+    event: "setAccount",
+    account: 3242
+}, {
+    event: "setSiteType",
+    type: SiteType
+}, {
+    event: "viewHome",
+    user_segment: user_segment_param,
+    ui_usrlvl: segId,
+    ui_media: user_seg
+});
+ 
+</script><div id="criteo-tags-div" style="display: none;"><iframe height="0" width="0" title="Criteo DIS iframe" src="./dis(1).html" style="display: none;"></iframe></div></body></html>

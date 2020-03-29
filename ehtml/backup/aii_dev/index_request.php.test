@@ -1,0 +1,90 @@
+<?php
+    header('Content-type: text/plain; charset= UTF-8');
+    // echo "string1";
+
+	//タブから呼び出される
+	$ret = "";
+	if (isset($_GET['tkey'])) {
+		// $ret .= "string2-2 ". $_GET['tkey'];
+
+		// SSQL
+		// TODO!!  下記2行が既に呼び出し元htmlで呼び出されたあとだと、outdirが空になってうまく動かない？
+		// require_once('./Ssql/ssql.php');
+		// ssql_setConfig("./config.ssql");
+		try {
+			require_once('./Ssql/ssql.php');
+			ssql_setConfig("./config.ssql");
+		} catch ( Exception $ex ) { }
+
+
+
+		function d(){	// 画像のキャッシュ回避用
+		  return '?'.date("YmdHis");
+		  //return '?'.date("Ymd");
+		}	
+
+		function get_SSQL_query($t){
+			$query1 = "
+				GENERATE HTML {
+				       [null((desc1)s.num_of_models)!
+				        s.num_of_models@{height=40, font-size=20, color='#6699FF', padding=2, align='center', valign='bottom'}!
+				       [ {plink(s.id||':  '||s.d@{height=30, font-size=13, padding=2, align='center'}, './r_details.html', s.id)!
+				          image(s.name||'/".$t.".png".d()."', './r')
+				         }@{padding=8, align='center'}! null((asc2)s.id)
+				       ],3! !
+				       ' '@{height=40}
+				       ]!
+				      } FROM stock_model s;
+			";
+			return $query1;
+		}
+		//image(s.name||'/r_2019-04.png".d()."', './r')
+
+		//$ts = array("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", );
+		//$ts = array("r_all2_2017", "r_all2_2018", "r_all2_2019");
+
+		//$ts = array("r_all4_1w"=>"直近1週間", "r_all4_1m"=>"直近1ヵ月", "r_all4_3m"=>"直近3ヵ月", "r_all4_6m"=>"直近6ヵ月");
+//		$ts = array("r_all4_1w"=>"直近1週間", "r_all4_1m"=>"直近1ヵ月", "r_all4_3m"=>"直近3ヵ月", "r_all4_6m"=>"直近6ヵ月", "r_all4_1y"=>"直近1年");
+		//$ts = array("r_all4_1w"=>"直近1週間", "r_all4_1m"=>"直近1ヵ月", "r_all4_3m"=>"直近3ヵ月", "r_all4_6m"=>"直近6ヵ月", "r_all4_1y"=>"直近1年", "r_summary_total_b"=>"トータル", "r_all_2019"=>"2019年", "r_2019-05"=>"今月");
+
+
+		
+		$ret = ssql_exec2(get_SSQL_query($_GET['tkey']));	//TODO ここで 500 (Internal Server Error)
+
+		if (1==1) {
+			$ret = substr($ret, strpos($ret, "<script>"));
+//			$ret = str_replace("<script>", "<script type=\"text/javascript\">console.log(\"Hello1\");", $ret);
+
+
+//			$ret = substr($ret, 0, strpos($ret, "<div id"));
+//			$ret = "<div id=\"ssqlResult1\"></div>\n".$ret;
+
+
+//			$ret .= "<script>console.log(\"Hello2\");</script>";
+
+			// document.getElementsByTagName("head")[0] -> document.getElementById("contents1")
+			//$ret = str_replace("getElementsByTagName(\"head\")[0]", "getElementById(\"contents1\")", $ret);
+
+			// [重要] document.getElementsByTagName("head")[0].appendChild -> $("head").append
+			$ret = str_replace("document.getElementsByTagName(\"head\")[0].appendChild", "$(\"head\").append", $ret);
+
+			// jscss// -> jscss/
+			$ret = str_replace("jscss//", "jscss/", $ret);
+		}
+
+
+
+
+		//$ret = "<div id=\"ssqlResult1\"></div>\n".$ret;
+
+
+
+		// $ret .= get_SSQL_query($_GET['tkey']);
+		//$ret = "OK ".$_GET['tkey']."<br>".get_SSQL_query($_GET['tkey']);
+//		$ret .= "OK ".$_GET['tkey'];
+
+		echo $ret;
+	}else{
+        echo 'FAIL TO AJAX REQUEST';
+    }
+?>

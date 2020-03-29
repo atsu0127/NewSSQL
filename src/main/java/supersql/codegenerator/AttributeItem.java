@@ -1,8 +1,11 @@
 package supersql.codegenerator;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.StringTokenizer;
 
+import supersql.common.GlobalEnv;
 import supersql.common.Log;
 import supersql.extendclass.ExtHashSet;
 import supersql.extendclass.ExtList;
@@ -48,6 +51,24 @@ public class AttributeItem implements Serializable{
 				UseAtts.add(new String(ch));
 				String tbl = new String(st1.nextToken());
 				UseTables.add(tbl);
+			}else{
+				UseAtts.add(new String(ch));
+				ArrayList<String> containedTableList = new ArrayList<>();
+				for(Map.Entry<String, ExtList> ent: GlobalEnv.tableAtts.entrySet()){
+					String tableName = ent.getKey();
+					ExtList attributes = ent.getValue();
+					if(attributes.contains(ch)){
+						containedTableList.add(tableName);
+					}
+				}
+				if(containedTableList.size() > 1){
+					Log.err("Attribute <" + ch + "> is contained by more than two tables.");
+					Log.err("Please use alias in From clause");
+				}else if (containedTableList.size() == 0){
+					Log.err("Attribute <" + ch + "> doesn't be contained by any tables.");
+				}else{
+					UseTables.add(containedTableList.get(0));
+				}
 			}
 		}
 	}

@@ -2,11 +2,9 @@ package supersql.codegenerator.HTML;
 
 import java.util.ArrayList;
 
-import supersql.codegenerator.Connector;
 import supersql.codegenerator.Decorator;
-import supersql.codegenerator.ITFE;
+import supersql.codegenerator.LinkForeach;
 import supersql.codegenerator.Manager;
-import supersql.common.GlobalEnv;
 import supersql.common.Log;
 import supersql.extendclass.ExtList;
 
@@ -54,7 +52,8 @@ public class HTMLDecoration extends Decorator {
 		htmlEnv.decorationStartFlag.add(0, false);
 		htmlEnv.decorationEndFlag.add(0, false);
 
-		this.setDataList(data_info);
+		this.setDataList(data_info);//d.floor
+		
 		
 		if (decos.containsKey("form")) {
 			htmlEnv.code.append(HTMLFunction.createForm(decos));
@@ -64,7 +63,6 @@ public class HTMLDecoration extends Decorator {
 		while (this.hasMoreItems()) {
 			//ITFE tfe = tfes.get(i);
 			//String classid = HTMLEnv.getClassID(tfe);
-			
 			htmlEnv.decorationStartFlag.set(0, true);
 			this.worknextItem();
 			htmlEnv.decorationEndFlag.set(0, true);
@@ -89,6 +87,29 @@ public class HTMLDecoration extends Decorator {
 			}
 			htmlEnv.code.append(classes.get(0));
 			htmlEnv.code.append(ends.get(0));
+			
+			//
+			String jsBuf = "", key = "", value = "";
+			String cssStrs[] = styles.get(0).toString().split(";");
+			for(String cssStr : cssStrs){
+				key = cssStr.substring(0, cssStr.indexOf(":"));
+				value = cssStr.substring(cssStr.indexOf(":")+1);
+				if(key.equals("background"))
+					jsBuf += "	$(\"body\").css(\"background\",\"url('"+value+"')\");\n";
+				else if(key.equals("page-bgcolor") || key.equals("pbgcolor"))
+					jsBuf += "	$(\"body\").css(\"background-color\",\""+value+"\");\n";
+			}
+			if(jsBuf.length() > 0){
+				htmlEnv.code.append(
+						"<script type=\"text/javascript\">\n" +
+						"<!--\n" +
+						""+LinkForeach.ID1+"_Func.sff"+HTMLG3.foreachID+" = function(){\n" +
+						jsBuf +
+						"}\n" +
+						"//-->" +
+						"</script>"
+						);
+			}
 		}
 		
 		fronts.remove(0);

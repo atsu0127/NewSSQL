@@ -3,7 +3,6 @@ package supersql.parser;
 import java.io.Serializable;
 import java.util.StringTokenizer;
 
-import supersql.common.Log;
 import supersql.extendclass.ExtHashSet;
 import supersql.extendclass.ExtList;
 

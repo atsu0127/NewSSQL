@@ -1,0 +1,8 @@
+var adContent = '';
+adContent += '<!-- AdPlacement : ipneafrontpagelrec -->' + '\n';
+adContent += '<!-- Oath SSP BannerAd DspId:0, SeatId:10827, DspCrId:passback-4171 -->' + '\n';
+adContent += '<i' + 'mg src="https://ap-southeast-1.onemobile.yahoo.com/admax/adEvent.do?tidi=770829411&amp;sitepid=222561&amp;posi=937720&amp;grp=%3F%3F%3F&amp;nl=1571826119843&amp;rts=1571826119619&amp;pix=1&amp;et=1&amp;a=cea6f3925491473d807c105697f7ad00&amp;m=aXAtMTAtMjItMTM5LTcw&amp;b=MTA4Mjc7QVBBQyAtIEFkWCBQYXNzYmFjazs_Pz87Ozs7Oy0xOzE1NzE4MjMwMDA.&amp;uid=y-heJHnxJ1l20yDRwiay.1rQPDepbJ&amp;tsrctype=2&amp;xdi=Q2hyb21lIC0gT1MgWHxBcHBsZXwxMF8xMl82fDE4&amp;xoi=MHxKUE4.&amp;brxdPublisherId=28261959434&amp;brxdSiteId=232561&amp;brxdSectionId=85525561&amp;dety=5" style="display:none;width:1px;height:1px;border:0;" width="1" height="1" alt=""/>' + '\n';
+adContent += '<scr' + 'ipt async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></scr' + 'ipt> <ins class="adsbygoogle" style="display:inline-block;width:300px;height:250px" data-ad-client="ca-pub-6785382607161389" data-ad-slot="1481641241" data-page-url="https://www.yahoo.com/"> </ins> <scr' + 'ipt> (adsbygoogle = window.adsbygoogle || []).push({params: {google_allow_expandable_ads: false}}); </scr' + 'ipt> <iframe height="1" width="1" style="display: none;" scrolling="no" allowtransparency="true" src="https://s.yimg.com/ja/ap/ssp_cookie_sync/apac.html"></iframe>' + '\n';
+adContent += '<scr' + 'ipt type="text/javascript" src="https://ads.yahoo.com/get-user-id?ver=2&n=38544&ts=1571826119&sig=f92c2e79a4414e78&gdpr=0&gdpr_consent="></scr' + 'ipt>' + '\n';
+adContent += '<!-- Ads by - Optimized by AdMax from NEXAGE - Wednesday, October 23, 2019 6:21:59 AM EDT -->' + '\n';
+document.write(adContent);

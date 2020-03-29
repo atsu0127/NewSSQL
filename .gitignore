@@ -7,3 +7,10 @@ bin/
 .settings/org.eclipse.jdt.core.prefs
 .settings/*
 target/
+.idea
+.idea*
+newssql.iml
+reset
+out/
+META-INF/
+/.metadata/

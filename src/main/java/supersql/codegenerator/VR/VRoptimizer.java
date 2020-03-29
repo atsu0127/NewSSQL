@@ -20,7 +20,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
 
-import supersql.common.GlobalEnv;
 import supersql.common.Log;
 
 public class VRoptimizer {
@@ -904,17 +903,14 @@ public class VRoptimizer {
 				root = doc.getDocumentElement();
 			} catch (Exception e) {
 				Log.err("XML File not found : " + e);
-//				GlobalEnv.errorText += "XML File not found : " + e;
 				return null;
 			}
 			/* delete file */
 			File del_file = new File(filename);
 			if (del_file.exists()) {
-				// in debug, comment out under line
-				// if (del_file.delete()) {}
+				del_file.delete();
 			} else {
 				Log.err(del_file + "does not exist");
-//				GlobalEnv.errorText += del_file + "does not exist";
 			}
 			return startOptimizer();
 		} catch (Exception e) {

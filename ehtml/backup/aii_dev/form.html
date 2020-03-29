@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<!-- ピンチによる拡大・縮小 不可 -->
+<!-- <meta name="viewport" content="width=device-width, user-scalable=yes, maximum-scale=1.0, minimum-scale=1.0"> -->
+<!-- ピンチによる拡大・縮小 可 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AI Investments合同会社 | AI Investments合同会社では最新技術と自然との調和を目指します。">
+<meta name="keywords" content="">
+<title>AI Investments合同会社 | AI Investments合同会社では最新技術と自然との調和を目指します。</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen">
+<!--[if lt IE 9]>
+<script src="js/html5.js"></script>
+<script src="js/css3-mediaqueries.js"></script>
+<![endif]-->
+</head>
+<body>
+<!-- ヘッダー -->
+<div id="header">
+	<div class="inner">
+  
+  	<h1>AI Investments合同会社のサイトです</h1>
+
+		<!-- ロゴ -->
+		<div class="logo">
+			<a href="index.html">AI Investments合同会社<br><span>Company Slogan</span></a>
+		</div>
+		<!-- / ロゴ -->
+    
+    <!-- 電話番号+受付時間 -->
+		<div class="info">
+    	<p class="tel">電話: <strong>012-3456-7890</strong></p>
+			<p>受付時間: 平日 AM 10:00 〜 PM 5:00</p>
+    </div>
+		<!-- / 電話番号+受付時間 -->
+    
+
+
+  <!-- トップナビゲーション -->
+	<ul id="topnav">
+		<li class="active"><a href="index.html">トップページ<br><span>Top</span></a></li>
+		<li><a href="subpage.html">ごあいさつ<br><span>Greeting</span></a></li>
+		<li><a href="subpage.html">サービス概要<br><span>Service</span></a></li>
+		<li><a href="subpage.html">弊社の取り組み<br><span>Approach</span></a></li>
+		<li><a href="subpage.html">会社情報<br><span>Company</span></a></li>
+		<li><a href="subpage.html">お問い合わせ<br><span>Contact</span></a></li>
+	</ul>
+	<!-- トップナビゲーション -->
+  
+  </div>
+  
+</div>
+<!-- / ヘッダー -->
+
+<!-- メイン画像 -->
+<div id="mainBanner" class="mainImg">
+	<div class="inner">
+		<img src="images/mainImg.jpg" width="940" height="300" alt="">
+    <div class="slogan">
+			<h2>自然との調和を目指す企業です</h2>
+			<h3>革新的な技術で世の中を動かす企業を目指します。</h3>
+		</div>
+	</div>
+</div>
+<!-- / メイン画像 -->
+
+
+<div id="wrapper">
+
+	<div class="content gridWrapper">
+		<div style="font-size: x-large; color: red;">詳細</div>
+		<?php
+		function d(){	// 画像のキャッシュ回避用
+		  return '?'.date("YmdHis");
+		  //return '?'.date("Ymd");
+		}
+
+		// SSQL
+		require_once('./Ssql/ssql.php');
+		ssql_setConfig("./config.ssql");
+		$query0 = "
+			GENERATE ResponsiveHTML {
+					 image('./image/1.jpg')!
+					 'みんなの映画を見た感想を投稿'@{bgcolor='white', color='black'}!
+					 'あなたの感想をお聞かせください'@{color='white', bgcolor='gray'}!
+					 form('',
+					        '
+					                モデル数:num_of_models@{number, notnull}, 
+					                モデル番号:id@{number, notnull},
+					                モデル名:name@{text, notnull},
+					                説明:d@{textarea, notnull}
+					        ',
+					        'stock_model', '登録')!
+					  a('一覧ページ', 'index.html')
+			      } ;
+		";
+		$query1 = "
+			GENERATE ResponsiveHTML {
+					 image('./image/1.jpg')!
+					 'みんなの映画を見た感想を投稿'@{bgcolor='white', color='black'}!
+					 'あなたの感想をお聞かせください'@{color='white', bgcolor='gray'}!
+					 form('',
+					        '
+					                モデル数:num_of_models=(select distinct num_of_models from stock_model)@{sql, selectbox}, 
+					                モデル数2:num_of_models=(select distinct num_of_models from stock_model)@{sql, radio}, 
+					                モデル数3:num_of_models=(select distinct num_of_models from stock_model)@{sql, checkbox}, 
+					                モデル番号:id@{number, notnull},
+					                モデル名:name@{text, notnull},
+					                説明:d@{textarea, notnull}
+					        ',
+					        'stock_model', '登録')!
+					  a('一覧ページ', 'index.html')
+			      } ;
+		";
+		ssql_exec($query1);
+
+		$query2 = "
+			GENERATE ResponsiveHTML {
+					 image('./image/1.jpg')!
+					 'みんなの映画を見た感想を投稿'@{bgcolor='white', color='black'}!
+					 'あなたの感想をお聞かせください'@{color='white', bgcolor='gray'}!
+					 form('',
+					        '
+					                モデル数:num_of_models=(select distinct num_of_models from stock_model)@{val=\\\"select distinct num_of_models from stock_model\\\", sql, selectbox}, 
+					                モデル番号:id@{number, notnull},
+					                モデル名:name@{text, notnull},
+					                説明:d@{textarea, notnull}
+					        ',
+					        'stock_model', '登録')!
+					  a('一覧ページ', 'index.html')
+			      } ;
+		";
+		//ssql_exec($query2);
+
+
+		$query2 = "
+			GENERATE ResponsiveHTML {
+					 image('./image/1.jpg')!
+					 'みんなの映画を見た感想を投稿'@{bgcolor='white', color='black'}!
+					 'あなたの感想をお聞かせください'@{color='white', bgcolor='gray'}!
+					 {
+		                
+		                'モデル番号', id@{number, notnull}!
+		                'モデル名', name@{text, notnull}!
+		                '説明', d@{textarea, notnull}
+					  }@{form}!
+					  a('一覧ページ', 'index.html')
+			      } from stock_model;
+		";
+		//ssql_exec($query2);
+		?>
+	</div>
+
+	<!-- {'<div style=''font-size: large; color: red;''>'||s.id||'. '||s.name||'</div>'} -->
+	<!-- plink(s.name@{height=50, width=400, font-size=20, padding=15}, './r_detail.html', s.id)}@{padding=30} -->
+	<!-- {'<span style=''font-size: large; color: red;''>'||s.id||'. '||s.name||'</span>'} -->
+    <!-- 
+		         {image(s.date_str||'/'||s.model_dir||'/r_2019-01.png".d()."', './r')@{width=250, padding=3, align='center'},
+		          image(s.date_str||'/'||s.model_dir||'/r_2019-02.png".d()."', './r')@{width=250, padding=3, align='center'}}!
+		         {image(s.date_str||'/'||s.model_dir||'/r_2019-03.png".d()."', './r')@{width=250, padding=3, align='center'},
+		          image(s.date_str||'/'||s.model_dir||'/r_2019-04.png".d()."', './r')@{width=250, padding=3, align='center'}}!
+		         image(s.date_str||'/'||s.model_dir||'/r_2019-05.png".d()."', './r')@{width=250, padding=3} -->
+
+		         <!-- @{class=kakomi-box4} -->
+</div>
+<!-- / WRAPPER -->
+
+
+<!-- フッター -->
+<div id="footer">
+	<div class="inner">
+    
+	<!-- 3カラム -->
+    <section class="gridWrapper">
+      
+			<article class="grid">
+      			<!-- ロゴ -->
+				<p class="logo"><a href="index.html">AI Investments<br /><span>Company Slogan</span></a></p>
+				<!-- / ロゴ -->
+			</article>
+      
+      <article class="grid col3">
+      	<ul>
+					<li><a href="subpage.html">eco・環境事業</a></li>
+					<li><a href="subpage.html">コンピュータ</a></li>
+					<li><a href="subpage.html">飲食店事業</a></li>
+					<li><a href="subpage.html">ごあいさつ</a></li>
+					<li><a href="subpage.html">サービス概要</a></li>
+					<li><a href="subpage.html">会社情報</a></li>
+					<li><a href="subpage.html">お問い合わせ</a></li>
+					<li><a href="subpage.html">サイトマップ</a></li>
+				</ul>
+      	<p>Copyright(c) 2019 AI Investments Inc. All Rights Reserved.</p>
+      </article>
+		
+    </section>
+	<!-- / 3カラム -->
+      
+	</div>
+</div>
+<!-- / フッター -->
+
+</body>
+</html>

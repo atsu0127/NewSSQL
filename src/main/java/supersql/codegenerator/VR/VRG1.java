@@ -1,29 +1,20 @@
 package supersql.codegenerator.VR;
 
-import org.stringtemplate.v4.compiler.STParser.ifstat_return;
-
-import sun.security.krb5.internal.SeqNumber;
-import supersql.codegenerator.Ehtml;
 import supersql.codegenerator.Grouper;
-import supersql.codegenerator.Incremental;
 import supersql.codegenerator.Manager;
-import supersql.codegenerator.HTML.HTMLEnv;
-import supersql.common.GlobalEnv;
 import supersql.common.Log;
 import supersql.extendclass.ExtList;
 
 public class VRG1 extends Grouper {
 	
-
-	private VREnv vr_env;
+	private VREnv vrEnv;
 	private VREnv vr_env2;
 	boolean retFlag = false;	// 20140602_masato pagenationフラグ
 	boolean pageFlag = false;	// 20140602_masato pagenationフラグ
 
 	public VRG1(Manager manager, VREnv henv, VREnv henv2) {
-		this.vr_env = henv;
+		this.vrEnv = henv;
 		this.vr_env2 = henv2;
-
 	}
 
 	@Override
@@ -33,21 +24,23 @@ public class VRG1 extends Grouper {
 
 	@Override
 	public String work(ExtList data_info) {
-		
 		Log.out("------- G1 -------");
+		if(vrEnv.gLevel == 0){
+			VRAttribute.groupcount++;
+			VRAttribute.idcountarray.add(VRAttribute.idcount);//picture,wall
+			VRAttribute.idcount = 0;//picture,wall 初期化
+			vrEnv.currentNode = vrEnv.currentNode.appendChild(vrEnv.xml.createElement("group"));
+			VRC1.N3flag = false;//N次元初期化
+		
+		}
+		
 		this.setDataList(data_info);
-
-
-		// tk start///////////////////////////////////////////////////
-		vr_env.append_css_def_td(VREnv.getClassID(this), this.decos);
-
-		// 20140526_masato
-		int count = 0;		// 20140526_masato
-		int count2 = 0;		// 20140526_masato
-		int i = 0;			// 20140526_masato
-		int j = 0;			// 20140526_masato
+		vrEnv.append_css_def_td(VREnv.getClassID(this), this.decos);
+		
+		int i = 0;			
+		int j = 0;			
 		int k = 0;		
-		if (decos.containsKey("vr_x")) {
+		if (decos.containsKey("vr_x")) { //vr_xがあったら  複合反復子
 			i = Integer.parseInt(decos.getStr("vr_x"));
 			retFlag = true;
 			if(!VRAttribute.componexflag){
@@ -56,7 +49,7 @@ public class VRG1 extends Grouper {
 			}
 			VRAttribute.componexflag = true;
 		}
-		if (decos.containsKey("vr_y")) {///column->row_x, row->vr_y
+		if (decos.containsKey("vr_y")) {///column->row_x, row->vr_y 複合反復子
 			j = Integer.parseInt(decos.getStr("vr_y"));
 			retFlag = true;
 			if(!VRAttribute.componeyflag){
@@ -65,7 +58,7 @@ public class VRG1 extends Grouper {
 			}
 			VRAttribute.componeyflag = true;
 		}
-		if (decos.containsKey("vr_z")) {
+		if (decos.containsKey("vr_z")) {//複合反復子
 			k = Integer.parseInt(decos.getStr("vr_z"));
 			retFlag = true;
 			if(!VRAttribute.componezflag){
@@ -75,126 +68,57 @@ public class VRG1 extends Grouper {
 			VRAttribute.componezflag = true;
 		}
 		
-		// 20140602_masato
-		if(pageFlag){
-			vr_env.code.append("<div id=\"res\"></div>\n" + 
-			"<div id=\"Pagination\" class=\"pagination\"></div>\n" + 
-	        "<!-- Container element for all the Elements that are to be paginated -->\n" + 
-	        "<div id=\"hiddenresult\" style=\"display:none;\">\n" + 
-	        "<div class=\"result\">\n");
-		}
-		
-
-		// tk end//////////////////////////////////////////////////////
-	
-		
-		if(vr_env.gLevel == 0){
-			VRAttribute.floorarray.add(1);
-		}
-		if(vr_env.gLevel == 1){
+//		if(vrEnv.gLevel == VRcjoinarray.gLemaxlist.get(VRAttribute.groupcount)-2){
+//			VRAttribute.floorarray.add(1);
+//		}else
+		if(vrEnv.gLevel == VRcjoinarray.gLemaxlist.get(VRAttribute.groupcount)-1){
 			VRAttribute.exharray.add(1);
 		}
 		
-		VRAttribute.gjudge++;
 
 		while (this.hasMoreItems()) {
+			
 			VRAttribute.genre = "";
+			VRAttribute.Ngenre = "";
 			
 			try {
-				int l=VRManager.gindex.get(vr_env.gLevel);
-				VRManager.gindex.set(vr_env.gLevel,l+1);//gindex[]++
+				int l=VRManager.gindex.get(vrEnv.gLevel);
+				VRManager.gindex.set(vrEnv.gLevel,l+1);//gindex[]++
 			} catch (Exception e) {
 				VRManager.gindex.add(1);	//gindex[]=1
 			}
 
-			vr_env.gLevel++;
-			count++;
-			VRAttribute.seq = 0;///n2 kotani
-			
-			
-			if (GlobalEnv.isOpt()) {
-				vr_env2.code.append("<tfe type=\"repeat\" dimension=\"1\"");
-
-				if (decos.containsKey("class")) {
-					vr_env2.code.append(" class=\"");
-					vr_env2.code.append(decos.getStr("class") + " ");
-				}
-				if (vr_env.writtenClassId.contains(VREnv.getClassID(this))) {
-					if (decos.containsKey("class")) {
-						vr_env2.code.append(VREnv.getClassID(this) + "\"");
-					} else {
-						vr_env2.code.append(" class=\""
-								+ VREnv.getClassID(this) + "\"");
-					}
-				} else if (decos.containsKey("class")) {
-					vr_env2.code.append("\"");
-				}
-
-				vr_env2.code.append(" border=\"" + vr_env.tableBorder
-						+ "\"");
-
-				if (decos.containsKey("tablealign"))
-					vr_env2.code.append(" align=\""
-							+ decos.getStr("tablealign") + "\"");
-				if (decos.containsKey("tablevalign"))
-					vr_env2.code.append(" valign=\""
-							+ decos.getStr("tablevalign") + "\"");
-
-				if (decos.containsKey("tabletype")) {
-					vr_env2.code.append(" tabletype=\""
-							+ decos.getStr("tabletype") + "\"");
-					if (decos.containsKey("cellspacing")) {
-						vr_env2.code.append(" cellspacing=\""
-								+ decos.getStr("cellspacing") + "\"");
-					}
-					if (decos.containsKey("cellpadding")) {
-						vr_env2.code.append(" cellpadding=\""
-								+ decos.getStr("cellpadding") + "\"");
-					}
-				}
-				vr_env2.code.append(">");
-			}
-			
-			String classid = VREnv.getClassID(tfe);
-			
+			vrEnv.gLevel++;
+			VRAttribute.elearraySeq = 0;///n2 kotani
 			this.worknextItem();
-			
-			vr_env.gLevel--;
-		
+			vrEnv.gLevel--;
 		}
-		VRManager.gindex.set(vr_env.gLevel, 0);
-		if(vr_env.gLevel == 0){
+		VRManager.gindex.set(vrEnv.gLevel, 0);
+		
+		if(vrEnv.gLevel == 0){
 			VRManager.nest1count++;
 		}
 		
-		for(int l=0; l<VRAttribute.elearray.size();l++){
-			vr_env.code.append("<n2 seq=\""+l+"\">\n" );
-			vr_env.code.append(VRAttribute.elearray.get(l));
-			vr_env.code.append("</n2>\n" );			
+		for(int l=0; l<VRAttribute.elearrayXML.size();l++){//n2 kotani
+			vrEnv.currentNode.appendChild(VRAttribute.elearrayXML.get(l));
 		}
-		VRAttribute.elearray.clear();//初期化
-		VRAttribute.seq = 0;//初期化
-		
 
-		if(VRAttribute.gjudge==1){
-			VRAttribute.billnum++;
-		}
-		VRAttribute.gjudge--;
+		VRAttribute.elearrayXML.clear();//初期化
+		VRAttribute.elearraySeq = 0;//初期化
+		
 		
 		if (VREnv.getFormItemFlg()) {
 			VREnv.incrementFormPartsNumber();
 		}
 
-
-		if(vr_env.gLevel == 0){
+		if(vrEnv.gLevel == 0){
 			VRAttribute.componexflag = false;
 			VRAttribute.componeyflag = false;
 			VRAttribute.componezflag = false;
 			VRAttribute.cgcount++;
 			
-			vr_env.code.append("</group>\n");
+			vrEnv.currentNode = vrEnv.currentNode.getParentNode();
 			VRAttribute.grouptag++;
-			vr_env.code.append("<group>\n");
 			VRAttribute.genrearray22.add(VRAttribute.genrecount);
 		}
 		

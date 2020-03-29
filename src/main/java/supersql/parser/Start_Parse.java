@@ -12,11 +12,13 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
+import java.util.stream.Stream;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.Interval;
@@ -30,6 +32,7 @@ import supersql.codegenerator.VR.VRcjoinarray;
 import supersql.common.GlobalEnv;
 import supersql.common.Log;
 import supersql.common.Ssedit;
+import supersql.db.GetFromDB;
 import supersql.extendclass.ExtList;
 import supersql.parser.org.antlr.v4.runtime.MyErrorStrategy;
 
@@ -72,10 +75,12 @@ public class Start_Parse {
 	public static TFE schemaTop;
 	public static ExtList sch;
 	public static ExtList schema;
+	public static ExtList keys;
 	public WhereInfo whereInfo = new WhereInfo();
 	public static boolean distinct = false;
 	public static String[] ruleNames;
 	public static boolean foreach1Flag = false;	//added by goto 20161025 for link1/foreach1
+	public static HashMap<String, String> alias_name;
 
 
 
@@ -133,6 +138,7 @@ public class Start_Parse {
 
 	public Hashtable get_att_info(){
 		Hashtable attp = codegenerator.get_attp();
+
 		return attp;
 	}
 
@@ -451,6 +457,27 @@ public class Start_Parse {
 				}
 			}
 		}
+		if (list_from.size() > 2){
+			if(list_from.get(2) instanceof ExtList){
+				if (list_from.getExtListString(2, 0).equals("where_clause")){
+					ExtList tmp = new ExtList();
+					tmp.add(list_from.getExtList(1));
+					From newFrom = new From(tmp);
+				}
+			}else{
+				ExtList tmp = new ExtList();
+				for (int i = 1; i < list_from.size(); i = i + 2) {
+					if(list_from.getExtListString(i, 0).equals("table_or_subquery")){
+						tmp.add(list_from.getExtList(i));
+					}
+				}
+				From newFrom = new From(tmp);
+			}
+		}else if(list_from.size() == 2){
+			ExtList tmp = new ExtList();
+			tmp.add(list_from.getExtList(1));
+			From newFrom = new From(tmp);
+		}
 		Mobile_HTML5Function.after_from_string = getText(list_from, ruleNames);
 		if(Mobile_HTML5Function.after_from_string.toLowerCase().startsWith("from")){
 			Mobile_HTML5Function.after_from_string = Mobile_HTML5Function.after_from_string.substring(4);
@@ -471,6 +498,22 @@ public class Start_Parse {
 		having_c.append(embedGroup + " ");
 
 		fromInfo = new FromInfo(from_c.toString().trim());
+		//from句に並んでるテーブルの属性名を取得
+		GetFromDB gfd = new GetFromDB();
+		GlobalEnv.tableAtts = new HashMap<>();
+		for (int i = 0; i < from_c.toString().split(",").length; i++) {
+			String tbl = from_c.toString().split(",")[i].trim();
+			String tblName = new String();
+			if(tbl.split(" ").length == 2){
+				tblName = tbl.split(" ")[0];
+			}else{
+				tblName = tbl;
+			}
+			ExtList result = new ExtList();
+			gfd.getTableAtt(tblName, result);
+			GlobalEnv.tableAtts.put(tblName, result.unnest());
+		}
+		gfd.close();
 		Log.out("[Parser:From] from = " + fromInfo);
 		if (!(foreachFrom.equals(""))) {
 			Log.out(foreachFrom
@@ -478,19 +521,26 @@ public class Start_Parse {
 		}
 
 		if(parameters != null){
-			String where_tmp = "";
+			String where_tmp = "", p = "";
 			for(int i = 0; i < parameters.length; i++){
 				if(i != 0){
-					where_tmp += "AND"; 
+					where_tmp += " AND "; 
 				}
-				where_tmp += parameter_atts.get(i) + " = " + parameters[i];
+				// where_tmp += parameter_atts.get(i) + " = " + parameters[i];
+				p = parameters[i];
+				where_tmp += parameter_atts.get(i) + " = ";
+				if(GlobalEnv.isNumber(p)) {
+					where_tmp +=  p;
+				} else {
+					where_tmp +=  "'" + p + "'";
+				}
 			}
 
 			// where句の中身をチェック
 			if(where_c.toString().equals("")){
 				where_c.append(where_tmp);
 			} else {
-				where_tmp += "AND ";
+				where_tmp += " AND ";
 				where_c.insert(0, where_tmp);
 			}
 		}
@@ -535,7 +585,7 @@ public class Start_Parse {
 			try{
 				String a = query.substring(0, query.toLowerCase().indexOf("generate"));
 				String b = query.substring(query.toLowerCase().indexOf("generate"));
-				Log.info(a);
+//				Log.info(a);
 				Log.info(b);
 				VRcjoinarray.query = b;
 
@@ -657,7 +707,20 @@ public class Start_Parse {
 						}
 					}
 					list_table = set_fromInfo();
-
+//					alias_name = new HashMap<String, String>();//key:alias, value:table name
+					//tabata fixed 180521
+					//下のfor文内の条件を書き換えました。list_table.size()->list_table.size()-1
+//					for(int i = 0; i < list_table.size() - 1; i++){
+////						System.out.println("list_table: "+list_table);
+////						System.out.println("ruleNames: "+ruleNames.toString());
+//						String alias = getText((ExtList)((ExtList)list_table.get(i)).get(1), ruleNames).trim();
+//						builder = "";
+//						String name = getText((ExtList)((ExtList)list_table.get(i)).get(0), ruleNames).trim();
+//						builder = "";
+//						alias_name.put(alias, name);
+//					}
+//					Log.info(alias_name);
+					
 					//					Log.info(list_from_where);
 					//					String from1 = getText( list_from_where, ruleNames );
 					//					after_from = from1.substring(from1.toLowerCase().indexOf("from") + 4);
@@ -692,7 +755,7 @@ public class Start_Parse {
 			}
 		}
 	}
-	static String builder = new String();
+	public static String builder = new String();
 	public static String getText(ExtList tree, String[] ruleNames){
 		if(tree.size() != 1){
 			for(int i = 0; i < tree.size(); i++){

@@ -120,7 +120,18 @@ public class HTMLG3 extends Grouper {
 
 			if(!Start_Parse.foreach1Flag){
 				//added by goto 20161019 for new foreach
-				html_env.code.insert(0, "<DIV id=\""+ID+foreachID+"\" style=\"display:none\">\n");
+//				Log.e(HTMLEnv.bg);
+				html_env.code.insert(0, 
+						"<DIV id=\""+ID+foreachID+"\" style=\"display:none\">"
+//				+
+//						"<script type=\"text/javascript\">\n" +
+//						"<!--\n" +
+//						""+ID+"_Func.x"+foreachID+" = function(){\n" +
+//						"	$(\"body\").css(\"background\",\"url('pict/1932.png')\");\n" +
+//						"}\n" +
+//						"//-->" +
+//						"</script>\n"
+						);
 				html_env.code.append("</DIV>\n\n");
 				foreachContents.append(html_env.code);
 			}

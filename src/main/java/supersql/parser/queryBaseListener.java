@@ -1,4 +1,4 @@
-// Generated from query.g4 by ANTLR 4.5.3
+// Generated from src/main/java/supersql/parser/query.g4 by ANTLR 4.5
 
 package supersql.parser;
 
@@ -7,6 +7,7 @@ import java.io.*;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -81,13 +82,13 @@ public class queryBaseListener implements queryListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterJoin_string(queryParser.Join_stringContext ctx) { }
+	@Override public void enterAs_pair(queryParser.As_pairContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitJoin_string(queryParser.Join_stringContext ctx) { }
+	@Override public void exitAs_pair(queryParser.As_pairContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -124,6 +125,18 @@ public class queryBaseListener implements queryListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExp(queryParser.ExpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConcat_exp(queryParser.Concat_expContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConcat_exp(queryParser.Concat_expContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -225,6 +238,18 @@ public class queryBaseListener implements queryListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterGgplot(queryParser.GgplotContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitGgplot(queryParser.GgplotContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterIf_then_else(queryParser.If_then_elseContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -244,6 +269,18 @@ public class queryBaseListener implements queryListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitArithmetics(queryParser.ArithmeticsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArith(queryParser.ArithContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArith(queryParser.ArithContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -556,6 +593,30 @@ public class queryBaseListener implements queryListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAg_keyword(queryParser.Ag_keywordContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterGg_function_name(queryParser.Gg_function_nameContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitGg_function_name(queryParser.Gg_function_nameContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterGg_keyword(queryParser.Gg_keywordContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitGg_keyword(queryParser.Gg_keywordContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

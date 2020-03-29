@@ -24,6 +24,7 @@ import java.util.Hashtable;
 
 import supersql.codegenerator.CodeGenerator;
 import supersql.codegenerator.DecorateList;
+import supersql.codegenerator.Ehtml;
 import supersql.codegenerator.FuncArg;
 import supersql.codegenerator.Function;
 import supersql.codegenerator.ITFE;
@@ -62,7 +63,13 @@ public class Infinitescroll {
 	static String[] formHtml = {"","submit","select","checkbox","radio","text","textarea","hidden"};
 	static int whichForm;
 
+	public static ArrayList<Boolean> decompose = new ArrayList<Boolean>();
+	public static int IS_level = 0;
+	public static int IS_point = 0;
+
 	public static void Attributes(Mobile_HTML5Attribute ATT, Mobile_HTML5Env html_env, Mobile_HTML5Env html_env2, ExtList data_info){
+
+		//		Log.ehtmlInfo(IS_level);
 		String classid_for_ifs = "";
 		String[] ifs_div_String = {"", ""};
 		codes = new StringBuffer();
@@ -168,7 +175,7 @@ public class Infinitescroll {
 							html_env.code.append("<A href=\"\" onclick=\""+LinkForeach.ID1+"("+html_env.plink_glink_onclick+"); return false;\" data-ajax=\"false\" ");
 							tmp.append("<A href=\"\" onclick=\""+LinkForeach.ID1+"("+html_env.plink_glink_onclick+"); return false;\" data-ajax=\"false\" ");
 						}
-					
+
 					//html_env.code.append("<A href=\"" + html_env.linkurl + "\" ");
 					//added by goto 20120614 end
 				}
@@ -343,6 +350,7 @@ public class Infinitescroll {
 
 	public static void C1(Mobile_HTML5C1 C1, Mobile_HTML5Env html_env, ExtList data_info, ExtList data, ExtList<TFE> tfes, int tfeItems){
 		String outType = "div";
+
 
 		String classid_for_ifs = "";
 		String[] ifs_div_String = {"", ""};
@@ -544,7 +552,7 @@ public class Infinitescroll {
 					Mobile_HTML5Attribute.attributeDivWidth = Mobile_HTML5.getDivWidth("C1", C1.decos, tfesItemNum - Mobile_HTML5Function.func_null_count);	//null()
 					html_env.code.append("\n<div class=\"ui-block "+classid2+"\">\n");	//20130309
 					tmp.append("\n<div class=\"ui-block "+classid2+"\">\n");
-//					Log.ehtmlInfo("aaaaaaaa"+tmp);
+					//					Log.ehtmlInfo("aaaaaaaa"+tmp);
 					//added by goto 20161113  for function class width
 					Mobile_HTML5Attribute.setWidth(classid2, C1.decos, html_env);
 				}
@@ -843,6 +851,7 @@ public class Infinitescroll {
 		StringBuffer tmp = new StringBuffer();
 		if(!Infinite.preProcess(G2.getSymbol(), G2.decos, html_env)) return;	//Pre-process (前処理)
 
+		IS_level++;
 
 		if(G2.decos.containsKey("infinite-scroll")){
 			classid_for_ifs = classid + "_wrapper";
@@ -851,7 +860,23 @@ public class Infinitescroll {
 			html_env.append_css_def_td(G2.getSymbol(), classid_for_ifs, classid2 ,deco_ifs);
 			G2.decos.remove("infinite-scroll");
 			ifs_div_String = Mobile_HTML5.ifs_div_start(G2.getSymbol(), html_env, classid_for_ifs, ifs_div_String);
+
+			decompose.add(true);
+			if(IS_level > 1){
+				if(!decompose.get(Infinitescroll.IS_level-2)){
+					IS_point++;
+				}
+			}else{
+				IS_point++;
+			}
+			
+		}else{
+			decompose.add(false);
+			//			if(IS_level > 1){
+			//				
+			//			}
 		}
+
 		// ページネーション
 		if(Mobile_HTML5Env.getSelectFlg())
 			data_info = (ExtList) data_info.get(0);
@@ -1208,7 +1233,14 @@ public class Infinitescroll {
 		//        if(Sass.isBootstrapFlg()){
 		//
 		//        }
-//		codes.append(tmp.toString());
+		//		codes.append(tmp.toString());
+
+		if(IS_level > 1){
+			if(Infinitescroll.decompose.get(Infinitescroll.IS_level-2)){
+				IS_point--;
+			}
+		}
+		IS_level--;
 		StringBuffer before = new StringBuffer();
 		before.append("\n<div class=\""+ classid_for_ifs +"\" onscroll=\"scrolled(this)\" itemnum=\"'.$i1.'\">\n");//todo $i1
 		before.append(tmp.toString());
@@ -1229,15 +1261,34 @@ public class Infinitescroll {
 		String[] ifs_div_String = {"", ""};
 		String classid_for_ifs = "";
 		codes = new StringBuffer();
+
+		IS_level++;
+
+		int infinite_scroll_num = 0;
 		StringBuffer tmp = new StringBuffer();
 		if(!Infinite.preProcess(G1.getSymbol(), G1.decos, html_env))	return;
 		if(G1.decos.containsKey("infinite-scroll")){
-			classid_for_ifs = classid + "_wrapper";
+			classid_for_ifs = classid + "_wrapper";// div class=TFE10009_wrapper
 			DecorateList deco_ifs = new DecorateList();
+
+			infinite_scroll_num = Integer.parseInt(G1.decos.getStr("infinite-scroll"));//infinite-scroll = 3
+
 			deco_ifs.put("infinite-scroll", "");
-			html_env.append_css_def_td(G1.getSymbol(), classid_for_ifs, classid2, deco_ifs);
+			html_env.append_css_def_td(G1.getSymbol(), classid_for_ifs, classid2, deco_ifs);//make css for IS
 			G1.decos.remove("infinite-scroll");
-			ifs_div_String = Mobile_HTML5.ifs_div_start(G1.getSymbol(), html_env, classid_for_ifs, ifs_div_String);
+			ifs_div_String = Infinite.ifs_div_start(G1.getSymbol(), html_env, classid_for_ifs, ifs_div_String);
+
+			decompose.add(true);
+			if(IS_level > 1){
+				if(!decompose.get(Infinitescroll.IS_level-2)){
+					IS_point++;
+				}
+			}else{
+				IS_point++;
+			}
+			
+		}else{
+			decompose.add(false);
 		}
 		html_env.append_css_def_td(classid, G1.decos);
 		// ページネーション
@@ -1263,7 +1314,7 @@ public class Infinitescroll {
 				if(G1.decos.containsKey("tab1")){
 					html_env.code.append("<div data-role=\"content\"> <div id=\"tabs\">\n<ul>\n");
 					html_env.code.append("	<li><a href=\"#tabs-"+Mobile_HTML5Env.tabCount+"\">");
-					
+
 					tmp.append("<div data-role=\"content\"> <div id=\"tabs\">\n<ul>\n");
 					tmp.append("	<li><a href=\"#tabs-"+Mobile_HTML5Env.tabCount+"\">");
 					if(!G1.decos.getStr("tab1").equals("")){
@@ -1276,7 +1327,7 @@ public class Infinitescroll {
 					}
 					html_env.code.append("</a></li>\n");
 					html_env.code.append("</ul>\n<div id=\"tabs-"+Mobile_HTML5Env.tabCount+"\">\n");
-					
+
 					tmp.append("</a></li>\n");
 					tmp.append("</ul>\n<div id=\"tabs-"+Mobile_HTML5Env.tabCount+"\">\n");
 				}
@@ -1329,12 +1380,12 @@ public class Infinitescroll {
 				if(!G1.tableFlg){
 					//        		if(html_env.written_classid.contains(classid))
 					html_env.code.append("\n<DIV Class=\"ui-grid ##"+Mobile_HTML5Env.uiGridCount2+" "+classid+"\"");
-//					Log.ehtmlInfo(html_env.code);
-//					tmp.append("\n<DIV Class=\"ui-grid ##"+Mobile_HTML5Env.uiGridCount2+" "+classid+"\"");//taji 消して大丈夫？
+					//					Log.ehtmlInfo(html_env.code);
+					//					tmp.append("\n<DIV Class=\"ui-grid ##"+Mobile_HTML5Env.uiGridCount2+" "+classid+"\"");//taji 消して大丈夫？
 					//        		else
 					//        			html_env.code.append("\n<DIV Class=\"ui-grid ##"+Mobile_HTML5Env.uiGridCount2+"\"");
 					html_env.code.append(">\n");
-//					tmp.append(">\n");//taji 消して大丈夫？
+					//					tmp.append(">\n");//taji 消して大丈夫？
 					Mobile_HTML5Env.uiGridCount2++;
 				}
 
@@ -1352,61 +1403,6 @@ public class Infinitescroll {
 						tmp.append(Mobile_HTML5C1.getTableStartTag(html_env, G1.decos, G1)+"<TR>");
 					}
 				}
-			}else if(Sass.isBootstrapFlg()){
-				//        		if(!decos.containsKey("C1") && !decos.containsKey("G1")){
-				//            		html_env.code.append("<DIV Class=\"row\">");
-				//            		if(Sass.outofloopFlg.peekFirst()){
-				//            			Sass.makeRowClass();
-				//            		}
-				//            	}
-				//        		
-				//        		html_env.code.append("<DIV Class=\""+classid+"\">");
-				//        		html_env.code.append("<DIV Class=\"row\">");
-				//        		if(Sass.outofloopFlg.peekFirst()){
-				//        			Sass.makeClass(classid);
-				//        			Sass.defineGridBasic(classid, decos);
-				//        			Sass.makeRowClass();
-				//	      		}
-				//        		Sass.beforeLoop();
-
-				if(G1.firstFlg){
-					html_env.code.append("<DIV Class=\"row\">\n");
-					html_env.code.append("<DIV Class=\""+classid+"\">\n");
-					
-					tmp.append("<DIV Class=\"row\">\n");
-					tmp.append("<DIV Class=\""+classid+"\">\n");
-					if(Sass.outofloopFlg.peekFirst()){        				
-						//        				Sass.makeClass(classid);
-						//        				Sass.defineGridBasic(classid, decos);
-						//        				Sass.closeBracket();
-						Sass.makeColumn(classid, G1.decos, "", -1);
-					}
-				}
-
-				html_env.code.append("<DIV Class=\"row\">\n");
-				tmp.append("<DIV Class=\"row\">\n");
-				if(Sass.outofloopFlg.peekFirst()){
-					//        			Sass.makeRowClass();
-				}
-
-				Sass.beforeLoop();
-
-				//				if(decos.containsKey("slide")){
-				//					html_env.code.append("<div id=\"carousel-example-generic\" class=\"carousel slide\" data-ride=\"carousel\">\n"
-				//							+ "<!-- Indicators -->\n"
-				//							+ "<ol class=\"carousel-indicators\">\n");
-				//					for(int i = 0; i < Func.numberOfColumns; i++){
-				//						if(i == 0){
-				//							html_env.code.append("<li data-target=\"#carousel-example-generic\" data-slide-to=\""+ i +"\" class=\"active\"></li>\n");
-				//						}else{
-				//							html_env.code.append("<li data-target=\"#carousel-example-generic\" data-slide-to=\""+ i +"\"></li>\n");
-				//						}
-				//					}
-				//					html_env.code.append("</ol>\n"
-				//							+ "<!-- Wrapper for slides -->\n"
-				//							+ "<div class=\"carousel-inner\" role=\"listbox\">\n");
-				//				}
-				//added 161125 taji for @slide	
 			}
 		}
 		// System.out.println("G1 tableFlg = " + tableFlg + ", divFlg = " +
@@ -1624,7 +1620,7 @@ public class Infinitescroll {
 						+ "<span class=\"sr-only\">Next</span>\n"
 						+ "</a>\n"
 						+ "</div>\n");
-				
+
 				tmp.append("</div>\n");
 				tmp.append("<!-- Controls -->\n"
 						+ "<a class=\"left carousel-control\" href=\"#carousel-example-generic\" role=\"button\" data-slide=\"prev\">\n"
@@ -1659,7 +1655,7 @@ public class Infinitescroll {
 			if(G1.firstFlg){
 				html_env.code.append("</DIV>\n");//.classid
 				html_env.code.append("</DIV>\n");//.row
-				
+
 				tmp.append("</DIV>\n");//.classid
 				tmp.append("</DIV>\n");//.row
 				if(Sass.outofloopFlg.peekFirst()){
@@ -1701,8 +1697,15 @@ public class Infinitescroll {
 			G1.rowFlg = false;
 			Mobile_HTML5G2.tableStartTag = "";
 		}
+
+		if(IS_level > 1){
+			if(Infinitescroll.decompose.get(Infinitescroll.IS_level-2)){
+				IS_point--;
+			}
+		}
+		IS_level--;
 		Mobile_HTML5.postProcess(G1.getSymbol(), classid2, G1.decos, html_env);	//Post-process (後処理)
-//		codes.append(tmp.toString());
+		//		codes.append(tmp.toString());
 		StringBuffer before = new StringBuffer();
 		before.append("\n<div class=\""+ classid_for_ifs +"\" onscroll=\"scrolled(this)\" itemnum=\"'.$i1.'\">\n");
 		before.append(tmp.toString());
@@ -1946,7 +1949,7 @@ public class Infinitescroll {
 
 		return ret;
 	}
-	
+
 	public static void setWidth(String classid, DecorateList decos, Mobile_HTML5Env html_env) {
 		if(!decos.containsKey("width") && (!Mobile_HTML5Attribute.attributeDivWidth.equals("") || !Mobile_HTML5Attribute.attributeDivWidth2.equals(""))){
 			//attributeDivWidth, attributeDivWidth2
@@ -2385,7 +2388,7 @@ public class Infinitescroll {
 				html_env.code.append("<A href=\"" + html_env.linkurl + "\" ");
 				tmp.append("<A href=\"" + html_env.linkurl + "\" ");
 			}
-			
+
 			//html_env.code.append("<A href=\"" + html_env.linkurl + "\" ");
 			//added by goto 20121222 end
 
@@ -2436,7 +2439,7 @@ public class Infinitescroll {
 					html_env.code.append(Func.decos.getStr("class"));
 					tmp.append(Func.decos.getStr("class"));
 				}
-				
+
 				html_env.code.append(" \" src=\"" + path + "/" + Func.getAtt("default") + "\" onLoad=\"initLightbox()\"/>");
 				tmp.append(" \" src=\"" + path + "/" + Func.getAtt("default") + "\" onLoad=\"initLightbox()\"/>");
 			}
@@ -2463,7 +2466,7 @@ public class Infinitescroll {
 							"<img class=\"" + Mobile_HTML5Env.getClassID(Func) +" ");
 				}else{
 					html_env.code.append("<img class=\"" + Mobile_HTML5Env.getClassID(Func) +" ");
-					
+
 					tmp.append("<img class=\"" + Mobile_HTML5Env.getClassID(Func) +" ");
 				}
 
@@ -2482,7 +2485,7 @@ public class Infinitescroll {
 				tmp.append(Func.decos.getStr("class"));
 			}
 
-			//System.out.println("out:path:"+Func.getAtt("default"));
+			//Log.info("out:path:"+Func.getAtt("default"));
 
 			//added by goto 20121217 start
 			//html_env.code.append(" \" src=\"" + path + "/" + Func.getAtt("default") + "\"/>");
@@ -2531,7 +2534,7 @@ public class Infinitescroll {
 					//html_env.code.substring(0,html_env.code.lastIndexOf("<TABLE"));
 					html_env.code.append("<div data-role=\"page\" data-add-back-btn=\"true\" id=\"p-gallery\">\n");
 					html_env.code.append("<ul id=\"Gallery\" class=\"gallery\">\n");
-					
+
 					tmp.append("<div data-role=\"page\" data-add-back-btn=\"true\" id=\"p-gallery\">\n");
 					tmp.append("<ul id=\"Gallery\" class=\"gallery\">\n");
 					Mobile_HTML5Function.slideshowFlg=true;
@@ -2551,7 +2554,7 @@ public class Infinitescroll {
 				html_env.code.append(
 						"<li style=\"width:"+li_width+"%;\"><a href=\""+path+"/"+Func.getAtt("default")+"\" rel=\"external\">" +
 								"<img src=\"" + path + "/" + Func.getAtt("default") + "\" class=\"" + Mobile_HTML5Env.getClassID(Func) +"\" alt=\""+Mobile_HTML5Function.slideshowNum+"\" /></a></li>\n");
-				
+
 				tmp.append(
 						"<li style=\"width:"+li_width+"%;\"><a href=\""+path+"/"+Func.getAtt("default")+"\" rel=\"external\">" +
 								"<img src=\"" + path + "/" + Func.getAtt("default") + "\" class=\"" + Mobile_HTML5Env.getClassID(Func) +"\" alt=\""+Mobile_HTML5Function.slideshowNum+"\" /></a></li>\n");
@@ -2807,7 +2810,7 @@ public class Infinitescroll {
 		return statement;
 	}
 
-	
+
 	private static String Func_url(boolean mailFncFlg, Mobile_HTML5Function Func) {
 		String statement = "";
 		FuncArg fa1 = (FuncArg) Func.getArg(0), fa2, fa3;
@@ -4661,7 +4664,7 @@ public class Infinitescroll {
 							}
 
 							if(isSQL){
-								String b = "require_once '"+fn+"';";
+								String b = "require_once ('"+fn+"');";
 								if(!Start_Parse.sessionFlag)
 									b = "<?php "+b+" ?>\n";
 								else
@@ -4712,7 +4715,7 @@ public class Infinitescroll {
 
 								Mobile_HTML5.createFile(html_env, fn, php2);//PHPファイルの作成
 							}
-							
+
 							update_statement_buf = "   <script type=\"text/javascript\"> $(\\\'input[name="+id+"]\\\').val([\\\'"+updateFromValue+"\\\']); </script>\n";
 							ss = ss.substring(ss.indexOf("|")+1);
 						}
@@ -4892,14 +4895,14 @@ public class Infinitescroll {
 		if(!noreset){
 			statement += 
 					"	if(str.indexOf(\"completed\") !== -1) {\n" +
-					"		$(\"#SSQL_insert"+Func.insertCount+"panel form\")[0].reset();\n";
+							"		$(\"#SSQL_insert"+Func.insertCount+"panel form\")[0].reset();\n";
 			//added by goto 170606 for update(file/image)
 			if(!Mobile_HTML5_form.formTypeFileResetID.isEmpty()){
 				for(String id : Mobile_HTML5_form.formTypeFileResetID)
 					statement += "		$(\"#"+id+"\").empty();\n";
 			}
 			statement +=
-							"	}\n";
+					"	}\n";
 		}
 		if(reloadAfterInsert){
 			statement += 
@@ -5337,7 +5340,7 @@ public class Infinitescroll {
 							"		while($row = $result2->fetchArray()){\n";
 		} else if(DBMS.equals("postgresql") || DBMS.equals("postgres")){
 			s +=
-							"	$insert_db"+num+" = pg_connect (\"host="+HOST+" dbname="+DB+" user="+USER+""+(!PASSWD.isEmpty()? (" password="+PASSWD):"")+"\");\n" +
+					"	$insert_db"+num+" = pg_connect (\"host="+HOST+" dbname="+DB+" user="+USER+""+(!PASSWD.isEmpty()? (" password="+PASSWD):"")+"\");\n" +
 							"	try{\n" +
 							"		$select_sql = \"SELECT \".$insert_col.\" FROM \".$table.\" \".$update_where;\n" +
 							"		$result2 = pg_query($insert_db"+num+", $select_sql);\n" +
@@ -5345,7 +5348,7 @@ public class Infinitescroll {
 							"		while($row = pg_fetch_assoc($result2)){\n";
 		}
 		s +=
-						"			$b .= '<div id=\"SSQL_insert"+num+"_'.$j.'panel\" style=\"\" data-role=\"none\">';\n" +
+				"			$b .= '<div id=\"SSQL_insert"+num+"_'.$j.'panel\" style=\"\" data-role=\"none\">';\n" +
 						"			$b .= '<form method=\"post\" action=\"\" target=\"dummy_ifr\">';\n" +
 						"			\n" +
 						"			$b .= '<input type=\"hidden\" disabled=\"disabled\" value=\"'.$row['"+pKey+"'].'\">';	//New\n" +

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, user-scalable=yes, maximum-scale=1.0, minimum-scale=1.0">
+<meta name="description" content="AI Investments合同会社 | AI Investments合同会社では最新技術と自然との調和を目指します。">
+<meta name="keywords" content="">
+<title>AI Investments合同会社 | AI Investments合同会社では最新技術と自然との調和を目指します。</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen">
+<!--[if lt IE 9]>
+<script src="js/html5.js"></script>
+<script src="js/css3-mediaqueries.js"></script>
+<![endif]-->
+
+
+<!-- <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script> -->
+
+<!-- <script src="js/jquery-3.4.1.min.js"></script> -->
+<script src="js/jquery-3.3.1.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script> --> 
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
+
+<style type="text/css">
+<!--
+/* 以下タブ用 */
+.tabnav{
+    margin: 0;
+    padding: 0;
+}
+.tabnav li{
+    display: inline;
+}
+.tabnav li a{
+    display: inline-block;
+    background: #405dca;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+    text-decoration: none;
+}
+.tabnav li a:hover,
+.tabnav li a.active{
+    background: #ddd;
+    color: #333;
+}
+.tabcontent{
+    padding: 20px;
+    border: 1px dotted #ccc;
+}
+/* タブ用 終わり */
+
+-->
+</style>
+
+<script>
+jQuery(function($){
+//$('#tab01,#tab02,#tab03,#tab04,#tab05').on('click', function () {
+    $('.tabcontent > div').hide();
+ 
+    $('.tabnav a').click(function () {
+        $('.tabcontent > div').hide().filter(this.hash).fadeIn();
+ 
+        $('.tabnav a').removeClass('active');
+        $(this).addClass('active');
+ 
+        return false;
+    }).filter(':eq(0)').click();
+});
+$(function(){
+  //alert('Hello World!');
+
+});
+</script>
+
+</head>
+
+
+<body>
+
+<!-- ヘッダー -->
+<div id="header">
+	<div class="inner">
+  
+  	<h1>AI Investments合同会社のサイトです</h1>
+
+		<!-- ロゴ -->
+		<div class="logo">
+			<a href="index.html">AI Investments合同会社<br><span>Company Slogan</span></a>
+		</div>
+		<!-- / ロゴ -->
+    
+    <!-- 電話番号+受付時間 -->
+		<div class="info">
+    	<p class="tel">電話: <strong>012-3456-7890</strong></p>
+			<p>受付時間: 平日 AM 10:00 〜 PM 5:00</p>
+    </div>
+		<!-- / 電話番号+受付時間 -->
+    
+
+
+  <!-- トップナビゲーション -->
+	<ul id="topnav">
+		<li class="active"><a href="index.html">トップページ<br><span>Top</span></a></li>
+		<li><a href="subpage.html">ごあいさつ<br><span>Greeting</span></a></li>
+		<li><a href="subpage.html">サービス概要<br><span>Service</span></a></li>
+		<li><a href="subpage.html">弊社の取り組み<br><span>Approach</span></a></li>
+		<li><a href="subpage.html">会社情報<br><span>Company</span></a></li>
+		<li><a href="subpage.html">お問い合わせ<br><span>Contact</span></a></li>
+	</ul>
+	<!-- トップナビゲーション -->
+  
+  </div>
+  
+</div>
+<!-- / ヘッダー -->
+
+<!-- メイン画像 -->
+<div id="mainBanner" class="mainImg">
+	<div class="inner">
+		<img src="images/mainImg.jpg" width="940" height="300" alt="">
+    <div class="slogan">
+			<h2>自然との調和を目指す企業です</h2>
+			<h3>革新的な技術で世の中を動かす企業を目指します。</h3>
+		</div>
+	</div>
+</div>
+<!-- / メイン画像 -->
+
+
+<div id="wrapper">
+
+	<div class="content gridWrapper">
+
+
+		<?php
+			function d(){	// 画像のキャッシュ回避用
+			  return '?'.date("YmdHis");
+			  //return '?'.date("Ymd");
+			}
+
+			// 最終更新時刻の表示
+			function echo_last_update($filename, $s){
+				if(file_exists($filename)) {
+					//echo "最終更新:  " . date("Y年n月j日 $week[w] H:i:s", filemtime($filename)) . "<br><br>";
+					$t = filemtime($filename);
+					$week = ['日', '月', '火', '水', '木', '金', '土'];
+					echo $s."最終更新:  ".date("Y年n月j日(", $t).$week[date("w", $t)].date(") H:i:s", $t)."<br>";
+				}
+			}
+			//echo_last_update('index.html', 'ページ');
+			//echo_last_update('r/11563__57-t3__m_2757', 'データ');
+			echo_last_update('r/11563__57-t3__m_2757', '');
+			echo "<br>";
+		?>
+
+		<?php
+			// SSQL
+			require_once('./Ssql/ssql.php');
+			ssql_setConfig("./config.ssql");
+
+			function get_SSQL_query($t){
+				$query1 = "
+					GENERATE HTML {
+					       [null((desc1)s.num_of_models)!
+					        s.num_of_models||'モデルベース'@{height=40, font-size=20, color=#6699FF, padding=2, align=center, valign=bottom}!
+					       [ {plink(s.id||':  '||s.d@{height=30, font-size=13, padding=2, align=center}, './r_details.html', s.id)!
+					          image(s.name||'/".$t.".png".d()."', './r')
+					         }@{padding=8, align=center}! null((asc2)s.id)
+					       ],3! !
+					       ' '@{height=40}
+					       ]!
+					      } FROM stock_model s;
+				";
+				return $query1;
+			}
+			//image(s.name||'/r_2019-04.png".d()."', './r')
+
+			//$ts = array("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", );
+			//$ts = array("r_all2_2017", "r_all2_2018", "r_all2_2019");
+
+			//$ts = array("r_all4_1w"=>"直近1週間", "r_all4_1m"=>"直近1ヵ月", "r_all4_3m"=>"直近3ヵ月", "r_all4_6m"=>"直近6ヵ月");
+//			$ts = array("r_all4_1w"=>"直近1週間", "r_all4_1m"=>"直近1ヵ月", "r_all4_3m"=>"直近3ヵ月", "r_all4_6m"=>"直近6ヵ月", "r_all4_1y"=>"直近1年");
+			$ts = array("r_all4_1w"=>"直近1週間", "r_all4_1m"=>"直近1ヵ月", "r_all4_3m"=>"直近3ヵ月", "r_all4_6m"=>"直近6ヵ月", "r_all4_1y"=>"直近1年", "r_summary_total_b"=>"トータル", "r_all-1-2_seikairitsu_total_b"=>"正解率", "r_all3"=>"推移",  "r_all2_2019"=>"推移2019",  "r_all"=>"月毎", "r_all_2019"=>"月毎2019", "r_2019-05"=>"先月", "r_2019-06"=>"今月");
+			//$ts = array("r_all4_1w"=>"直近1週間", "r_all4_1m"=>"直近1ヵ月", "r_all4_3m"=>"直近3ヵ月", "r_all4_6m"=>"直近6ヵ月", "r_all4_1y"=>"直近1年", "r_summary_total_b"=>"トータル", "r_all_2019"=>"2019年", "r_2019-05"=>"今月");
+
+
+			//TODO タブから呼び出される
+	//		if (isset($_GET['tkey'])) {
+	//			ssql_exec(get_SSQL_query($_GET['tkey']));
+	//		}
+
+		?>
+
+
+ <!-- 
+	<div id="result"></div>
+	<div id="detail"></div> -->
+	<div id="contents1"></div>
+  	<script>
+	    var myfunc = function (key) {
+	    	//alert("Hello world! "+key);
+	      	console.log("myfunc key: "+key);
+	      	$(function () {
+		        // Ajax通信を開始する
+		        $.ajax({
+		            url: 'index_request.php',
+		            type: 'GET', // getかpostを指定(デフォルトは前者)
+		            data: { // 送信データを指定(getの場合は自動的にurlの後ろにクエリとして付加される)
+		                tkey: key,
+		            },
+		            success: function(response) {
+		            	console.log("myfunc 成功!");
+		            	console.log(response);
+
+		            	// $('#result').text('成功');
+		            	// $('#detail').html(response);
+
+		            	$('#contents1').append(response);
+//		            	$('#'.key).html(response);
+
+		            	console.log("終了");
+		            },
+				    error: function (xhr, textStatus, errorThrown) {
+				        // エラー処理
+				        var res = {}
+				        try {
+				            res = $.parseJSON(xhr.responseText);
+				        } catch (e) {
+				        }
+				        console.log(res.code);
+				        console.log(res.message);
+				    }
+				});
+			});
+			console.log("End.");
+	    }
+  	</script>
+
+	<!-- 以下、動作OK		2019/6/11 -->
+  	<!-- <a href="#" onclick="myfunc('r_all4_1y')" class="active">直近1年</a> -->
+
+
+		<!-- タブ -->
+		<ul class="tabnav">
+			<!-- <li><a href="#tab01">メニュー1</a></li> -->
+		    <!-- <li><a href="#tab02">メニュー2</a></li> -->
+		    <!-- <li><a href="#tab03">メニュー3</a></li> -->
+			<?php
+				$i=1;
+				foreach($ts as $key => $value){
+					// <li><a href="#tab01">メニュー1</a></li>
+//					echo '<li><a href="#tab0'.$i.'">'.$value.'</a></li>';
+					//echo '<li><a href="index.php?tkey='.$key.'">'.$value.'</a></li>';
+					echo '<li><a href="#tab0'.$i.'" onclick="myfunc(\''.$key.'\')">'.$value.'</a></li>';
+	//				echo '<li><a href="#" onclick="myfunc(\''.$key.'\')">'.$value.'</a></li>';
+					$i++;
+				}
+			?>
+			<!-- <li><a href="#tab06">タブ6</a></li> -->
+		    <!-- <li><a href="#tab02">メニュー2</a></li> -->
+		    <!-- <li><a href="#tab03">メニュー3</a></li> -->
+		</ul>
+		<div class="tabcontent">
+		    <!-- <div id="tab01">タブ1の内容</div> -->
+		    <!-- <div id="tab02">タブ2の内容<br>タブ2の内容</div> -->
+		    <!-- <div id="tab03">タブ3の内容<br>タブ3の内容<br>タブ3の内容</div> -->
+
+			<!-- <div style="font-size: x-large; color: pink;">モデル一覧 -2019年4月成績-</div> -->
+			<?php
+				$i=1;
+				foreach($ts as $key => $value){
+				//for($i=0; $i<count($ts); $i++){
+					// <div id="tab01">タブ1の内容</div>
+					//echo '<div id="tab0'.($i+1).'">';
+					//echo $ts[$i]."<br>";
+					echo '<div id="tab0'.$i.'">';
+					//echo '<div style="font-size: x-large; color: pink;">モデル一覧 -'.$ts[$i].'成績-</div>';
+					
+					echo '<div style="font-size: x-large; color: pink;">予測モデル一覧 -'.$value.'成績-</div>';
+
+	                echo '	<div id='.$key.'></div>';
+					echo '</div>';
+					//echo 'a<br>bb<br>ccc<br></div>';
+					$i++;
+				}
+			?>
+			<!-- <div id="tab06">タブ6の内容</div> -->
+
+		</div>
+
+
+
+	</div>
+
+
+
+
+  <!-- 4カラム -->
+  <section class="gridWrapper">
+		<article class="grid colDark">
+			<h3>自然との調和を目指す企業です</h3>	
+			<p>AI Investments合同会社では最新技術と自然との調和を目指します。革新的な技術で世の中を動かす企業を目指します。</p>
+			<p class="readmore"><a href="subpage.html">&raquo; 詳細を確認する</a></p>
+		</article>
+		<article class="grid colLight">
+			<h3>自然との調和を目指す企業です</h3>
+			<p>AI Investments合同会社では最新技術と自然との調和を目指します。革新的な技術で世の中を動かす企業を目指します。</p>
+			<p class="readmore"><a href="subpage.html">&raquo; 詳細を確認する</a></p>
+		</article>
+		<article class="grid colDark">
+      <h3>自然との調和を目指す企業です</h3>
+			<p>AI Investments合同会社では最新技術と自然との調和を目指します。革新的な技術で世の中を動かす企業を目指します。</p>
+			<p class="readmore"><a href="subpage.html">&raquo; 詳細を確認する</a></p>
+		</article>
+    <article class="grid colLight">
+			<h3>自然との調和を目指す企業です</h3>
+			<p>AI Investments合同会社では最新技術と自然との調和を目指します。革新的な技術で世の中を動かす企業を目指します。</p>
+			<p class="readmore"><a href="subpage.html">&raquo; 詳細を確認する</a></p>
+		</article>
+	</section>
+	<!-- / 4カラム -->
+      
+	<section class="gridWrapper" id="sub">
+  	<article class="grid col2">
+    	<h3>自然との調和を目指す企業です</h3>	
+			<p>AI Investments合同会社では最新技術と自然との調和を目指します。革新的な技術で世の中を動かす企業を目指します。</p>
+      <p>AI Investments合同会社では最新技術と自然との調和を目指します。革新的な技術で世の中を動かす企業を目指します。</p>
+      <p>AI Investments合同会社では最新技術と自然との調和を目指します。革新的な技術で世の中を動かす企業を目指します。</p>
+			<p class="readmore"><a href="subpage.html">&raquo; 詳細を確認する</a></p>
+    </article>
+    
+    <article class="grid">
+			<h3>革新的な技術</h3>
+			<ul>
+				<li><a href="subpage.html">環境への取り組みについての説明ページです</a></li>
+				<li><a href="subpage.html">ecoキャンペーン開催中です</a></li>
+				<li><a href="subpage.html">オフィスの移転に関して</a></li>
+				<li><a href="subpage.html">最新商品のご紹介</a></li>
+				<li><a href="subpage.html">新規サービスを開始しました</a></li>
+				<li><a href="subpage.html">環境賞受賞に関してはこちらをご確認ください</a></li>
+			</ul>
+    </article>
+    
+    <article class="grid">
+			<h3>ホームページサンプル</h3>
+			<ul>
+				<li><a href="subpage.html">環境への取り組みについての説明ページです</a></li>
+				<li><a href="subpage.html">ecoキャンペーン開催中です</a></li>
+				<li><a href="subpage.html">オフィスの移転に関して</a></li>
+				<li><a href="subpage.html">最新商品のご紹介</a></li>
+				<li><a href="subpage.html">新規サービスを開始しました</a></li>
+				<li><a href="subpage.html">環境賞受賞に関してはこちらをご確認ください</a></li>
+			</ul>
+		</article> 
+    
+	</section>
+
+</div>
+<!-- / WRAPPER -->
+
+
+<!-- フッター -->
+<div id="footer">
+	<div class="inner">
+    
+	<!-- 3カラム -->
+    <section class="gridWrapper">
+      
+			<article class="grid">
+      			<!-- ロゴ -->
+				<p class="logo"><a href="index.html">AI Investments<br /><span>Company Slogan</span></a></p>
+				<!-- / ロゴ -->
+			</article>
+      
+      <article class="grid col3">
+      	<ul>
+					<li><a href="subpage.html">eco・環境事業</a></li>
+					<li><a href="subpage.html">コンピュータ</a></li>
+					<li><a href="subpage.html">飲食店事業</a></li>
+					<li><a href="subpage.html">ごあいさつ</a></li>
+					<li><a href="subpage.html">サービス概要</a></li>
+					<li><a href="subpage.html">会社情報</a></li>
+					<li><a href="subpage.html">お問い合わせ</a></li>
+					<li><a href="subpage.html">サイトマップ</a></li>
+				</ul>
+      	<p>Copyright(c) 2019 AI Investments Inc. All Rights Reserved.</p>
+      </article>
+		
+    </section>
+	<!-- / 3カラム -->
+      
+	</div>
+</div>
+<!-- / フッター -->
+
+</body>
+</html>

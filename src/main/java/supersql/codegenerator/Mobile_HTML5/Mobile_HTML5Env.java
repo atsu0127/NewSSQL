@@ -12,7 +12,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import supersql.codegenerator.CSS;
 import supersql.codegenerator.CodeGenerator;
 import supersql.codegenerator.Connector;
 import supersql.codegenerator.DecorateList;
@@ -22,8 +21,6 @@ import supersql.codegenerator.Jscss;
 import supersql.codegenerator.LinkForeach;
 import supersql.codegenerator.LocalEnv;
 import supersql.codegenerator.Sass;
-import supersql.codegenerator.Compiler.PHP.PHP;
-import supersql.codegenerator.HTML.HTMLEnv;
 import supersql.codegenerator.Responsive.Responsive;
 import supersql.common.GlobalEnv;
 import supersql.common.Log;
@@ -49,6 +46,7 @@ public class Mobile_HTML5Env extends LocalEnv {
 	public boolean embedFlag = false;
 	public String fileName;
 	public boolean foreachFlag;
+	public int gLevel = 0;
 	public ArrayList<String> outTypeList = new ArrayList<>();
 	public int cNum = 0;
 	public int xmlDepth = 0;
@@ -85,7 +83,9 @@ public class Mobile_HTML5Env extends LocalEnv {
 
 	public String filename = "";
 
-	public String outfile;
+	public static String outfile;
+
+	public String linkUrl;
 
 	public String linkoutfile;
 
@@ -158,6 +158,12 @@ public class Mobile_HTML5Env extends LocalEnv {
 
 	public boolean sinvoke_flag = false;
 
+	// added by masato 20151124 for plink'values
+	public ArrayList<String> valueArray;
+
+	// added by masato 20151124 for plink'values
+	public boolean plinkFlag = false;
+
 	public int link_flag;
 
 	public String linkurl;
@@ -194,8 +200,10 @@ public class Mobile_HTML5Env extends LocalEnv {
 
 	public void getHeader(int headerFlag) {		//[headerFlag] 1:通常、2:Prev/Next
 		if(GlobalEnv.getframeworklist() == null){
-			header.insert(0, "<!DOCTYPE html>\n<HTML>\n<HEAD>\n");
-			Log.out("<HTML>\n<head>");
+			if (!Ehtml.isEhtml2()) {
+				header.insert(0, "<!DOCTYPE html>\n<HTML>\n<HEAD>\n");
+				Log.out("<HTML>\n<head>");
+			}
 
 			//added by goto 20130508  "Login&Logout"
 			if(Start_Parse.sessionFlag){
@@ -205,9 +213,11 @@ public class Mobile_HTML5Env extends LocalEnv {
 				s += "?>\n";
 				header.insert(0, s);
 			}
-
-			//Generator
-			header.append("<meta name=\"GENERATOR\" content=\" SuperSQL (Generate Mobile_HTML5) \">\n");
+			
+			if (!Ehtml.isEhtml2()) {
+				//Generator
+				header.append("<meta name=\"GENERATOR\" content=\" SuperSQL (Generate Mobile_HTML5) \">\n");
+			}
 		}
 
 		//tk start////////////////////////////////////////////////////
@@ -280,9 +290,11 @@ public class Mobile_HTML5Env extends LocalEnv {
 			if (!title.equals(""))
 				header.append("<title>"+title+"</title>\n");
 
-			//added by goto 20121217 start
-			header.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>\n");
-
+			if (!Ehtml.isEhtml2()) {
+				//added by goto 20121217 start
+				header.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>\n");
+			}
+			
 			//	        header.append("<STYLE TYPE=\"text/css\">\n");
 			//	        header.append("<!--\n");
 			//	        commonCSS();
@@ -292,7 +304,8 @@ public class Mobile_HTML5Env extends LocalEnv {
 
 			header.append("<!-- SuperSQL JavaScript & CSS -->\n");
 			if(Sass.isBootstrapFlg()){
-				header.append("<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js\"></script>\n");
+				//header.append("<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js\"></script>\n");
+				header.append("<script src=\"jscss/jquery.min.js\"></script>\n");
 				header.append("<script src=\"jscss/bootstrap.js\"></script>\n");
 				header.append("<script src=\"jscss/forBootstrap/jquery.twbsPagination.js\"></script>\n");
 			}
@@ -357,18 +370,27 @@ public class Mobile_HTML5Env extends LocalEnv {
 					css.append(".ui-block { margin: 0; padding: 0; float: left; min-height: 1px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box; }\n");
 				}else if(Sass.isBootstrapFlg()){
 					//add tbt for centering
+//					if(!GlobalEnv.getCenteringflag()){
 					if(!GlobalEnv.getCenteringflag()){
-						css.append("body{ text-align:center; float:center; vertical-align:middle; }\n");
+						if (Ehtml.isEhtml2() && Ehtml.outType==1) 
+							css.append(Ehtml.getID(1)+"{ text-align:center; float:center; vertical-align:middle; }\n");
+						else
+							css.append("body{ text-align:center; float:center; vertical-align:middle; }\n");
 					}
 				}
 			}
 
 			header.append("<!-- Generated CSS -->\n");
 			header.append("<link rel=\"stylesheet\" type=\"text/css\" href=\""+ Jscss.getGenerateCssFileName(0) + "\">\n");
-			header.append("</HEAD>\n\n");
-
-
-			header.append("<BODY>\n");
+//			if (Ehtml.isEhtml2() && Ehtml.outType==1) {
+////				header.append("<script src=\"jscss/jquery.scoped.js\"></script>\n");
+////				header.append("<script type=\"text/javascript\"> window.onload = function(){ $.scoped(); } </script>\n");
+//			} else {
+			if (!Ehtml.isEhtml2()) {
+				header.append("</HEAD>\n\n");
+	
+				header.append("<BODY>\n");
+			}
 			header.append("<!-- SuperSQL Body  Start -->\n");
 			//20160603 bootstrap
 			if(!Sass.isBootstrapFlg()){
@@ -565,11 +587,12 @@ public class Mobile_HTML5Env extends LocalEnv {
 								"	<input type=\"text\" name=\"id\" data-mini=\"true\">\n");
 					}else if (Sass.isBootstrapFlg()){
 						header.append(
-								"<div id=\"LOGINpanel1\">\n" +
-										"<div id=\"loginTitle1\"><h2 class=\"form-signin-heading\">Log In</h2></div>" +
-										//"<div style=\"color:lightgray; font-size:30; background-color:black; border-radius:15px 15px 0px 0px;\" id=\"loginTitle1\">Log in</div>\n" +
-										"<form method=\"post\" action=\"\" target=\"login_ifr1\" class=\"form-signin\">\n" +
-										"<input type=\"text\" id=\"id\" name=\"id\" class=\"form-control\" placeholder=\""+c1str+"\" required autofocus>\n");
+								"<center>\n" +
+								"<div id=\"LOGINpanel1\" style=\"width:350px;\">\n" +
+								"<div id=\"loginTitle1\"><h2 class=\"form-signin-heading\">Log In</h2></div>" +
+								//"<div style=\"color:lightgray; font-size:30; background-color:black; border-radius:15px 15px 0px 0px;\" id=\"loginTitle1\">Log in</div>\n" +
+								"<form method=\"post\" action=\"\" target=\"login_ifr1\" class=\"form-signin\">\n" +
+								"<input type=\"text\" id=\"id\" name=\"id\" class=\"form-control\" placeholder=\""+c1str+"\" required autofocus>\n");
 					}
 					if(!s_val.equals("1")){
 						if(!Sass.isBootstrapFlg()){
@@ -634,6 +657,7 @@ public class Mobile_HTML5Env extends LocalEnv {
 									"<p id=\"Login_text1\"  data-role=\"none\"><!-- ここに表示 --></p>\n" +
 									"<br>\n" +
 									"</div>\n" +
+									((Sass.isBootstrapFlg())? "</center>\n" : "") +
 									"<!-- Login Panel end -->\n" +
 									"\n" +
 									"<?php\n" +
@@ -1312,11 +1336,13 @@ public class Mobile_HTML5Env extends LocalEnv {
 					}else if(Sass.isBootstrapFlg()){
 						header.append(
 								"<!-- Logout start -->\n" +
-										"<form method=\"post\" action=\"\" target=\"logout_ifr1\" id=\"LOGOUTpanel1\" name=\"LOGOUTpanel1\">\n" +
+										"<center>\n" +
+										"<form method=\"post\" action=\"\" target=\"logout_ifr1\" id=\"LOGOUTpanel1\" name=\"LOGOUTpanel1\"  style=\"width:350px;\">\n" +
 										"<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\" value=\" Logout \" name=\"ssql_logout1\">Logout</button>\n" +
 										"<input type=\"hidden\" value=\" Logout \" name=\"ssql_logout1\">\n" +
 										"</form>\n" +
 										"<iframe name=\"logout_ifr1\" style=\"display:none;\"></iframe>\n" +
+										"</center>\n" +					
 								"\n");
 					}
 				}
@@ -1371,7 +1397,7 @@ public class Mobile_HTML5Env extends LocalEnv {
 			if(!Sass.isBootstrapFlg()){
 				header.append("<!-- data-role=content start -->\n<div data-role=\"content\" style=\"padding:0\" id=\"content1\">\n");
 			}
-			header.append("<div id=\"ssql_body_contents\">\n");	//added by goto 20161019 for new foreach
+			header.append("<div id=\""+((!Ehtml.isEhtml2())? "ssql_body_contents" : Ehtml.getID(0))+"\">\n");	//added by goto 20161019 for new foreach
 			if(Start_Parse.sessionFlag){
 				header.append("\n<div id=\"showValues\"><!-- ユーザ名等を表示 --></div>\n");	//ユーザ名
 			}
@@ -1417,11 +1443,70 @@ public class Mobile_HTML5Env extends LocalEnv {
 
 	public static String commonCSS() {
 		String s = "";
+		// modifeid by masato 20151118 for ehtml start
+		if(Ehtml.flag){
+				String id ="ssqlResult" + GlobalEnv.getQueryNum();
+			if(defaultCssFlag){ // TODO 場合分けをしっかり
+				s += "#"+ id + " div, table, tr, td, th, img, a{\n" +
+						"\tmargin: 0;\n" +
+						"\tpadding: 0;\n" +
+						"\tborder: 0;\n" +
+						"\tfont-style:normal;\n" +
+						"\tfont-weight: normal;\n" +
+						"\tfont-size: 100%;\n" +
+						"}\n\n";
+
+				s += "#"+ id + " .row { display: flex; flex-direction: row; }\n";
+				s += "#"+ id + " .col { display: flex; flex-direction: column; }\n";
+				s += "#"+ id + " .att { border: solid 0px; }\n";
+
+				s += "#"+ id + " table {\n" +
+						"\tborder: 1px solid;\n" +
+						"\tpadding: 1px;\n" +
+						"}\n\n";
+
+				s += "#"+ id + " td {\n" +
+						"\tvertical-align: middle;\n" +
+						"}\n\n";
+
+//				s += "#"+ id + " table {\n" +
+//						"\tmargin-left: auto;\n" +
+//						"\tmargin-right: auto;\n" +
+//						"\tmargin-top: auto;\n" +
+//						"\tmargin-bottom: auto;\n" +
+//						"\twidth: 100px;\n" +
+//						"\tborder: 1px #BFBFBF solid;\n" +
+//						"}\n\n";
+//				s += "#"+ id + " table th {\n" +
+//						"\tfont-weight: normal;\n" +
+//						"\tbackground-color: #F0F0F0;\n" +
+//						"\tborder:1px solid #BFBFBF;\n" +
+//						"\ttext-align: center;\n" +
+//						"\tpadding: 1px;\n" +
+//						"}\n\n";
+//				s += "#"+ id + " table tr td {\n" +
+//						"\twidth: 100px;\n" +
+//						"\tbackground-color: #3f3f3f;\n" +
+//						"\tcolor: #e9e9e9;\n" +
+//						"\ttext-align: center;\n" +
+//						"\tpadding: 0px;\n" +
+//						"\tvertical-align: middle;\n" +
+//						"}\n\n";
+//				s += "#"+ id + " table.att {\n" +
+//						"\tmargin-left: auto;\n" +
+//						"\tmargin-right: auto;\n" +
+//						"\tmargin-top: auto;\n" +
+//						"\tmargin-bottom: auto;\n" +
+//						"\tborder: 1px #F0F0F0 solid;\n" +
+//						"}\n\n";
+			}
+		} else
+		// modifeid by masato 20151118 for ehtml end
 		if (!GlobalEnv.isOpt()) {
-			s += ".att { padding:0px; margin:0px; height:100%; z-index:2; }\n";
-			s += ".linkbutton { text-align:center; margin-top:5px; padding:5px; }\n";
-			s += ".embed { vertical-align:text-top; padding:0px; margin:0px; border:0px,0px,0px,0px; width:100%; }\n" +
-					".noborder { border-width:0px; margin-top:-1px; padding-top:-1px; "
+			s += Ehtml.getID(1)+" .att { padding:0px; margin:0px; height:100%; z-index:2; }\n";
+			s += Ehtml.getID(1)+" .linkbutton { text-align:center; margin-top:5px; padding:5px; }\n";
+			s += Ehtml.getID(1)+" .embed { vertical-align:text-top; padding:0px; margin:0px; border:0px,0px,0px,0px; width:100%; }\n" +
+				 Ehtml.getID(1)+" .noborder { border-width:0px; margin-top:-1px; padding-top:-1px; "
 					+ "margin-bottom:-1px; padding-bottom:-1px; }\n\n";
 		}
 		return s;
@@ -1446,7 +1531,7 @@ public class Mobile_HTML5Env extends LocalEnv {
 
 		if(GlobalEnv.getframeworklist() == null){
 			//added by goto 20161019 for new foreach
-			footer.append("</div><!-- Close id=\"ssql_body_contents\" -->\n");
+			footer.append("</div><!-- Close id=\""+((!Ehtml.isEhtml2())? "ssql_body_contents" : Ehtml.getID(0))+"\" -->\n");
 			footer.append(LinkForeach.getC3contents());
 
 			//added by goto 20161109 for plink/glink
@@ -1454,14 +1539,14 @@ public class Mobile_HTML5Env extends LocalEnv {
 				footer.append(LinkForeach.getPlinkGlinkContents());
 
 			if(footerFlag==1){		//通常時のみ（Prev/Nextでは行わない）
-				if((!noAd || !copyright.isEmpty()) && !CodeGenerator.getMedia().toLowerCase().equals("php"))
+				if((!noAd || !copyright.isEmpty()) && !Ehtml.isEhtml2() && !CodeGenerator.getMedia().toLowerCase().equals("php"))
 					footer.append("<hr size=\"1\">\n");
 				if(!copyright.equals("")){	//copyrightを付加
 					footer.append("<div>\n");
 					footer.append("Copyright &COPY; "+copyright+" All Rights Reserved.\n");
 					footer.append("</div>\n\n");
 				}
-				if(!noAd && !supersql.codegenerator.Compiler.PHP.PHP.isPHP){
+				if(!noAd && !Ehtml.isEhtml2() && !supersql.codegenerator.Compiler.PHP.PHP.isPHP){
 					//SuperSQLの宣伝を付加
 					footer.append("<div style=\"font-size:11;\">\n");
 					if(fff.equals(""))	footer.append("This HTML was generated by <a href=\"http://ssql.db.ics.keio.ac.jp/\" rel=\"external\">SuperSQL</a>\n");
@@ -1507,8 +1592,11 @@ public class Mobile_HTML5Env extends LocalEnv {
 				footer.append("</div><!-- Close container -->\n");
 			}
 			footer.append("<!-- SuperSQL Body  End -->");
-			footer.append("\n</BODY>\n</HTML>\n");
-			Log.out("</body></html>");
+			
+			if (!Ehtml.isEhtml2()) {
+				footer.append("\n</BODY>\n</HTML>\n");
+				Log.out("</body></html>");
+			}
 		}
 	}
 
@@ -1656,22 +1744,35 @@ public class Mobile_HTML5Env extends LocalEnv {
 
 		// �ѥǥ��󥰡�;���
 		if (decos.containsKey("padding")) {
-			cssbuf.append(" padding:" + decos.getStr("padding") + ";");
-			//        } else {
-			//            cssbuf.append(" padding:0.3em;");
+			if (GlobalEnv.getframeworklist() == null && !Ehtml.flag)
+				cssbuf.append(" padding:" + decos.getStr("padding") + ";");
+			else
+				cssbuf.append(" padding:" + decos.getStr("padding") + "px;");
 		}
 		//padding
 		if (decos.containsKey("padding-left")) {
-			cssbuf.append(" padding-left:" + decos.getStr("padding-left") + ";");
-		}
-		if (decos.containsKey("padding-top")) {
-			cssbuf.append(" padding-top:" + decos.getStr("padding-top") + ";");
+			if (GlobalEnv.getframeworklist() == null && !Ehtml.flag)
+				cssbuf.append(" padding-left:" + decos.getStr("padding-left") + ";");
+			else
+				cssbuf.append(" padding-left:" + decos.getStr("padding-left") + "px;");
 		}
 		if (decos.containsKey("padding-right")) {
-			cssbuf.append(" padding-right:" + decos.getStr("padding-right") + ";");
+			if (GlobalEnv.getframeworklist() == null && !Ehtml.flag)
+				cssbuf.append(" padding-right:" + decos.getStr("padding-right") + ";");
+			else
+				cssbuf.append(" padding-right:" + decos.getStr("padding-right") + "px;");
+		}
+		if (decos.containsKey("padding-top")) {
+			if (GlobalEnv.getframeworklist() == null && !Ehtml.flag)
+				cssbuf.append(" padding-top:" + decos.getStr("padding-top") + ";");
+			else
+				cssbuf.append(" padding-top:" + decos.getStr("padding-top") + "px;");
 		}
 		if (decos.containsKey("padding-bottom")) {
-			cssbuf.append(" padding-bottom:" + decos.getStr("padding-bottom") + ";");
+			if (GlobalEnv.getframeworklist() == null && !Ehtml.flag)
+				cssbuf.append(" padding-bottom:" + decos.getStr("padding-top") + ";");
+			else
+				cssbuf.append(" padding-bottom:" + decos.getStr("padding-top") + "px;");
 		}
 
 		// ������
@@ -1698,21 +1799,25 @@ public class Mobile_HTML5Env extends LocalEnv {
 			cssbuf.append(" color:" + decos.getStr("font color") + ";");
 
 		// ʸ����
-		if (decos.containsKey("font-size"))
-			if(GlobalEnv.getframeworklist() == null)
+		//170710 changed by tbt
+		if (decos.containsKey("font-size")){
+			if (GlobalEnv.getframeworklist() == null && !Ehtml.flag && !GlobalEnv.isNumber(decos.getStr("font-size")))
 				cssbuf.append(" font-size:" + decos.getStr("font-size") + ";");
 			else
 				cssbuf.append(" font-size:" + decos.getStr("font-size") + "px;");
-		if (decos.containsKey("font size"))
-			if(GlobalEnv.getframeworklist() == null)
+		}
+		if (decos.containsKey("font size")){
+			if (GlobalEnv.getframeworklist() == null && !Ehtml.flag && !GlobalEnv.isNumber(decos.getStr("font size")))
 				cssbuf.append(" font-size:" + decos.getStr("font size") + ";");
 			else
-				cssbuf.append(" font-size:" + decos.getStr("font size") + "px;");
-		if (decos.containsKey("size"))
-			if(GlobalEnv.getframeworklist() == null)
+				cssbuf.append(" font-size:" + decos.getStr("font size") + "px;");}
+		if (decos.containsKey("size")){
+			if (GlobalEnv.getframeworklist() == null && !Ehtml.flag  && !GlobalEnv.isNumber(decos.getStr("size")))
 				cssbuf.append(" font-size:" + decos.getStr("size") + ";");
 			else
 				cssbuf.append(" font-size:" + decos.getStr("size") + "px;");
+		}
+		//tbt end
 
 		// ʸ�������
 		if (decos.containsKey("font-weight"))
@@ -1745,7 +1850,7 @@ public class Mobile_HTML5Env extends LocalEnv {
 			charset=decos.getStr("charset");
 		else if(!charsetFlg)
 			charset="UTF-8";		//default charset = UTF-8
-		if(!charsetFlg && charset!=null){
+		if(!charsetFlg && charset!=null && !Ehtml.isEhtml2()){
 			//changed by goto 20130110 start
 			//metabuf.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" + charset + "\">");
 			metabuf.append("<meta charset=\"" + charset + "\">");
@@ -1801,20 +1906,22 @@ public class Mobile_HTML5Env extends LocalEnv {
 		//added by goto 20161217  for responsive
 		Responsive.check(decos);
 
-		if (decos.containsKey("description"))
-			metabuf.append("\n<meta name=\"Description\" content=\"" + decos.getStr("description") + "\">");
-		if (decos.containsKey("keyword"))
-			metabuf.append("\n<meta name=\"Keyword\" content=\"" + decos.getStr("keyword") + "\">");
-		if (decos.containsKey("author"))
-			metabuf.append("\n<meta name=\"Author\" content=\"" + decos.getStr("author") + "\">");
-		if (decos.containsKey("copyright")){
-			copyright = decos.getStr("copyright");		//あとでfooterにappendする
-			metabuf.append("\n<meta name=\"Copyright\" content=\"" + copyright + "\">");
+		if (!Ehtml.isEhtml2()) {
+			if (decos.containsKey("description"))
+				metabuf.append("\n<meta name=\"Description\" content=\"" + decos.getStr("description") + "\">");
+			if (decos.containsKey("keyword"))
+				metabuf.append("\n<meta name=\"Keyword\" content=\"" + decos.getStr("keyword") + "\">");
+			if (decos.containsKey("author"))
+				metabuf.append("\n<meta name=\"Author\" content=\"" + decos.getStr("author") + "\">");
+			if (decos.containsKey("copyright")){
+				copyright = decos.getStr("copyright");		//あとでfooterにappendする
+				metabuf.append("\n<meta name=\"Copyright\" content=\"" + copyright + "\">");
+			}
+			if (decos.containsKey("pragma"))
+				metabuf.append("\n<meta http-equiv=\"Pragma\" content=\"" + decos.getStr("pragma") + "\">");
+			if (decos.containsKey("robot"))
+				metabuf.append("\n<meta name=\"Robot\" content=\"" + decos.getStr("robot") + "\">");
 		}
-		if (decos.containsKey("pragma"))
-			metabuf.append("\n<meta http-equiv=\"Pragma\" content=\"" + decos.getStr("pragma") + "\">");
-		if (decos.containsKey("robot"))
-			metabuf.append("\n<meta name=\"Robot\" content=\"" + decos.getStr("robot") + "\">");
 
 		//added by goto 20130519  "moveto"
 		if (decos.containsKey("refresh")){
@@ -1946,7 +2053,9 @@ public class Mobile_HTML5Env extends LocalEnv {
 						br.close();
 					}
 
-					pw.println("</ol>\n\n</code>\n</pre>\n</body>\n</html>");
+					pw.println("</ol>\n\n</code>\n</pre>\n");
+					if (!Ehtml.isEhtml2())
+						pw.println("</body>\n</html>");
 					pw.close();
 				} catch (Exception e) { /*Log.i("Create HTML failed: "+e);*/ }
 			}
@@ -1981,7 +2090,13 @@ public class Mobile_HTML5Env extends LocalEnv {
 		if (cssbuf.length() > 0) {
 			haveClass = 1;
 			//����?�Υ�����?����
-			css.append("." + classid + "{");
+			// modified by masato 20151122 start for etml, css
+			if(Ehtml.flag){
+				String id = "ssqlResult" + GlobalEnv.getQueryNum();
+				css.append("#" + id + " ." + classid + "{");
+			} else {
+				css.append("." + classid + "{");
+			}
 
 			css.append(cssbuf);
 			//��?�Υ�����?�Ĥ�
@@ -2081,6 +2196,12 @@ public class Mobile_HTML5Env extends LocalEnv {
 			return result;
 		}
 		result =  "TFE" + tfe.getId();
+//		if (!Ehtml.isEhtml2())
+//			result =  "TFE" + tfe.getId();
+//		else{
+//			Ehtml.setTFE_ID(Ehtml.getID(0)+"_"+"TFE" + tfe.getId());	//TODO Sass.java:".TFE", Jscss.java:".TFE"
+//			result = Ehtml.getTFE_ID();
+//		}
 		return result;
 	}
 

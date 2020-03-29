@@ -1,0 +1,156 @@
+
+
+
+<br><br><h1>EHtml TEST</h1>
+
+
+<script src="js/jquery-3.3.1.min.js"></script>
+<style type="text/css">
+<!--
+/* 以下タブ用 */
+.tabnav{
+    margin: 0;
+    padding: 0;
+}
+.tabnav li{
+    display: inline;
+}
+.tabnav li a{
+    display: inline-block;
+    background: #405dca;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+    text-decoration: none;
+}
+.tabnav li a:hover,
+.tabnav li a.active{
+    background: #ddd;
+    color: #333;
+}
+.tabcontent{
+    padding: 20px;
+    border: 1px dotted #ccc;
+}
+/* タブ用 終わり */
+
+-->
+</style>
+<script>
+jQuery(function($){
+//$('#tab01,#tab02,#tab03,#tab04,#tab05').on('click', function () {
+    $('.tabcontent > div').hide();
+ 
+    $('.tabnav a').click(function () {
+        $('.tabcontent > div').hide().filter(this.hash).fadeIn();
+ 
+        $('.tabnav a').removeClass('active');
+        $(this).addClass('active');
+ 
+        return false;
+    }).filter(':eq(0)').click();
+});
+$(function(){
+  //alert('Hello World!');
+
+});
+</script>
+
+
+<div id="ssql_test_wrapper1" style="width:80%">  
+
+	<div class="content gridWrapper">
+		<?php
+			//echo 'Test start';
+			$ts = array("r_all4_1w"=>"直近1週間", "r_all4_1m"=>"直近1ヵ月", "r_all4_3m"=>"直近3ヵ月", "r_all4_6m"=>"直近6ヵ月", "r_all4_1y"=>"直近1年", "r_summary_total_b"=>"トータル", "r_all-3_seikairitsu_b"=>"正解率", "r_all3"=>"推移",  "r_all2_2019"=>"推移2019",  "r_all"=>"月毎", "r_all_2019"=>"月毎2019", "r_2019-05"=>"先月", "r_2019-06"=>"今月");
+		?>
+
+		<!-- タブ -->
+		<ul class="tabnav">
+			<?php
+				$i=1;
+				foreach($ts as $key => $value){
+					echo '<li><a href="#tab0'.$i.'" onclick="myfunc(\''.$key.'\')">'.$value.'</a></li>';
+					$i++;
+				}
+			?>
+		</ul>
+		<div class="tabcontent">
+			<?php
+				$i=1;
+				foreach($ts as $key => $value){
+					echo '<div id="tab0'.$i.'">';
+					echo '<div style="font-size: x-large; color: pink;">予測モデル一覧 -'.$value.'成績-</div>';
+	                echo '	<div id='.$key.'></div>';
+					echo '</div>';
+					$i++;
+				}
+			?>
+		</div>
+	</div>
+
+
+
+	<!-- SSQL実行用ajax function -->
+	<div id="contents1"></div>
+	<div id="ssqlResult1"></div>
+
+
+	<script type="text/javascript">
+		var old_key = "";	//現在のタブ情報を保存するため
+	    var myfunc = function (key) {
+	    	console.log("old_key: "+old_key);
+
+	    	if(key != old_key){
+		    	//[!!重要!!] id = ssqlResult1 の削除 -> tab01に残っている ssqlResult1 にappendしてしまうため（TODO: 本体内 or requestPHPで行ったほうが良い or 本体内で他の対策を行う）
+		    	$("#ssqlResult1").remove();		// 重要!!
+
+		      	console.log("myfunc key: "+key);
+			        // Ajax通信を開始
+			        // console.log("Ajax Start");
+			        $.ajax({
+			            url: 'index_request.php',
+			            type: 'GET', // getかpostを指定(デフォルトは前者)
+			            data: { // 送信データを指定(getの場合は自動的にurlの後ろにクエリとして付加される)
+			                tkey: key,
+			            },
+					    beforeSend: function() {
+    						//$('#'+key).html("Loading...");
+    						$('#'+key).html("<div style='text-align:center'><img src='jscss/images/ajax-loader.gif' / ></div>");
+  			            },
+			            success: function(response) {
+			            	$('#'+key).html(response);
+
+			            	console.log("myfunc 成功!");
+			            	console.log(response);
+
+			            	console.log("正常終了");
+			            },
+					    error: function (xhr, textStatus, errorThrown) {
+					        // エラー処理
+					        console.log("Error");
+					        var res = {};
+					        try {
+					            res = $.parseJSON(xhr.responseText);
+					        } catch (e) {
+					        }
+					        console.log(res.code);
+					        console.log(res.message);
+					    },
+				       	// complete : function(data) {
+				        // 	console.log("Complete");
+				        // }
+					});
+					// console.log("Ajax End");
+				// });
+				console.log("End.");
+
+				old_key = key;
+			}
+	    }
+  	</script>
+
+</div>
+<br><br>
+
+

@@ -1,0 +1,26 @@
+#ssqlResult1 div, table, tr, td, th, img, a{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-style:normal;
+	font-weight: normal;
+	font-size: 100%;
+}
+
+#ssqlResult1 .row { display: flex; flex-direction: row; }
+#ssqlResult1 .col { display: flex; flex-direction: column; }
+#ssqlResult1 .att { border: solid 0px; }
+#ssqlResult1 table {
+	border: 1px solid;
+	padding: 1px;
+}
+
+#ssqlResult1 td {
+	vertical-align: middle;
+}
+
+#ssqlResult1 .TFE10002{ height:40px; padding:2px; text-align:center; vertical-align:bottom; color:#6699FF; font-size:20px; }
+#ssqlResult1 .TFE10012{ padding:8px; text-align:center; }
+#ssqlResult1 .TFE10004{ height:30px; padding:2px; text-align:center; font-size:13px; }
+#ssqlResult1 .TFE10017{ height:40px; }
+

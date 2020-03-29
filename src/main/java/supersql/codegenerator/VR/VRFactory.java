@@ -41,16 +41,14 @@ public class VRFactory extends Factory {
 
 	@Override
 	public Connector createC3(Manager manager) {
-		// return new HTMLC1(manager, html_env);
 		return new VRC3(manager, vrEnv, vrEnv2);
 	}
 
 	@Override
 	public Connector createC4(Manager manager) {
 		return new VRC1(manager, vrEnv, vrEnv2);
-		// return new HTMLC4(manager);
 	}
-
+	
 
 	@Override
 	public Grouper createG1(Manager manager) {
@@ -71,7 +69,6 @@ public class VRFactory extends Factory {
 	@Override
 	public Grouper createG4(Manager manager) {
 		return new VRG1(manager, vrEnv, vrEnv2);
-		// return new HTMLG4(manager, html_env);
 	}
 
 	@Override
@@ -87,7 +84,6 @@ public class VRFactory extends Factory {
 
 	public Decorator createDecoration(Manager manager) {
 		return new VRDecoration(manager, vrEnv, vrEnv2);
-		// return new HTMLG4(manager, html_env);
 	}
 	
 	@Override

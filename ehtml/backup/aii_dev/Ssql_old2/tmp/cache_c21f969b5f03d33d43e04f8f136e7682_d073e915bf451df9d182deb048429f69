@@ -1,0 +1,36 @@
+                       665416152a:2:{i:0;s:543:"
+					GENERATE HTML {
+					       [null((desc1)s.num_of_models)!
+					        s.num_of_models||'モデルベース'@{height=40, font-size=20, color=#6699FF, padding=2, align=center, valign=bottom}!
+					       [ {plink(s.id||':  '||s.d@{height=30, font-size=13, padding=2, align=center}, './r_details.html', s.id)!
+					          image(s.name||'/r_2019-06.png?20190710184548', './r')
+					         }@{padding=8, align=center}! null((asc2)s.id)
+					       ],3! !
+					       ' '@{height=40}
+					       ]!
+					      } FROM stock_model s;
+				";i:1;s:541:"<script>
+	g1PaginationRowNum[12]=0;
+
+	g1PaginationColumnNum[12]=0;
+
+	g2PaginationRowNum[12]=0;
+
+	g2PaginationColumnNum[12]=0;
+
+	g1RetNum[12]=3;
+
+	g2RetNum[12]=0;
+
+	xmlFileName[12]="/srv/http/htdocs/ssql/goto/essql/aii_new/GeneratedXML/ssql/ssqlResult13.xml";
+
+	var css=document.createElement("link");
+	css.setAttribute("rel", "stylesheet");
+	css.setAttribute("type", "text/css");
+	css.setAttribute("href", "jscss//ssql/ssqlResult13.css");
+	document.getElementsByTagName("head")[0].appendChild(css);
+
+</script>
+<div id="ssqlResult13">
+</div>
+";}

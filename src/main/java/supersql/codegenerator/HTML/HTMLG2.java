@@ -83,17 +83,10 @@ public class HTMLG2 extends Grouper implements Serializable {
 			// divFlg);
 			html_env.append_css_def_td(HTMLEnv.getClassID(this), this.decos);
 			// add taji for infinite scroll 20170203
-			if(decos.containsKey("infinite-scroll") && GlobalEnv.scrollednum > 0){
-				Incremental.outXMLData(html_env.xmlDepth, "<Grouper"
-						+ html_env.gLevel + " type=\'IS\' outType=\'" + html_env.outTypeList.get(html_env.xmlDepth) + "\'"
-						+ " class=\'" + HTMLEnv.getClassID(this) + "\'" + row + column + scroll
-						+ ">\n");
-			}else{
-				Incremental.outXMLData(html_env.xmlDepth, "<Grouper"
-						+ html_env.gLevel + " type=\'G2\' outType=\'" + html_env.outTypeList.get(html_env.xmlDepth) + "\'"
-						+ " class=\'" + HTMLEnv.getClassID(this) + "\'" + row + column + scroll
-						+ ">\n");
-			}
+			Incremental.outXMLData(html_env.xmlDepth, "<Grouper"
+					+ html_env.gLevel + " type=\'G2\' outType=\'" + html_env.outTypeList.get(html_env.xmlDepth) + "\'"
+					+ " class=\'" + HTMLEnv.getClassID(this) + "\'" + row + column + scroll
+					+ ">\n");
 			while (this.hasMoreItems()) {
 				// System.out.println("ここ: tableFlg = " + tableFlg +
 				// ", divFlg = " + divFlg);
@@ -115,11 +108,11 @@ public class HTMLG2 extends Grouper implements Serializable {
 				data_info = (ExtList) data_info.get(0);
 
 			String classname = Modifier.getClassName(decos, HTMLEnv.getClassID(this));//kotani_idmodifier_ok
-//			if (this.decos.containsKey("class")) {
-//				classname = this.decos.getStr("class");
-//			} else {
-//				classname = HTMLEnv.getClassID(this);
-//			}
+			//			if (this.decos.containsKey("class")) {
+			//				classname = this.decos.getStr("class");
+			//			} else {
+			//				classname = HTMLEnv.getClassID(this);
+			//			}
 
 			// tk start////////////////////////////////////////////////////
 			html_env.append_css_def_td(HTMLEnv.getClassID(this), this.decos);
@@ -132,7 +125,7 @@ public class HTMLG2 extends Grouper implements Serializable {
 
 			if (decos.containsKey("row") && decos.containsKey("column")) {
 				String paginationHTML_JS = HTMLPagination.getPaginationHTML_JS1();
-				
+
 				if (html_env.decorationStartFlag.size() > 0) {
 					if (html_env.decorationStartFlag.get(0)) {
 						HTMLDecoration.fronts.get(0)
@@ -170,15 +163,15 @@ public class HTMLG2 extends Grouper implements Serializable {
 					}
 				} else {
 					//taji comment out for []!3% //todo: G1と同じ処理にする？
-//					html_env.code
-//					.append("<TABLE cellSpacing=\"0\" cellPadding=\"0\" border=\"");
-//					html_env.code.append(html_env.tableBorder + "\" ");
-//					html_env.code.append("class=\"");
-//					html_env.code.append("nest\"");
-//					html_env.code.append(html_env.getOutlineMode());
-//					html_env.code.append(">");
-//					html_env.code.append("<TR><TD class=\""
-//							+ HTMLEnv.getClassID(tfe) + " nest\">\n");
+					//					html_env.code
+					//					.append("<TABLE cellSpacing=\"0\" cellPadding=\"0\" border=\"");
+					//					html_env.code.append(html_env.tableBorder + "\" ");
+					//					html_env.code.append("class=\"");
+					//					html_env.code.append("nest\"");
+					//					html_env.code.append(html_env.getOutlineMode());
+					//					html_env.code.append(">");
+					//					html_env.code.append("<TR><TD class=\""
+					//							+ HTMLEnv.getClassID(tfe) + " nest\">\n");
 				}
 			}
 
@@ -228,18 +221,19 @@ public class HTMLG2 extends Grouper implements Serializable {
 					html_env.code.append(html_env.tableBorder + "\" ");
 					Log.out("embed flag :" + html_env.embedFlag);
 					html_env.code.append("class=\"");
+
 					if (html_env.embedFlag)
 						html_env.code.append(" embed ");
 
 					if (decos.containsKey("outborder"))
 						html_env.code.append(" noborder ");
 
-//					if (decos.containsKey("class")) {
-//						html_env.code.append(decos.getStr("class") + " ");
-//					}
+					//					if (decos.containsKey("class")) {
+					//						html_env.code.append(decos.getStr("class") + " ");
+					//					}
 					html_env.code.append(Modifier.getClassModifierValue(decos) + " ");//kotani_idmodifier_ok
-					
-					
+
+
 					if (html_env.writtenClassId.contains(HTMLEnv.getClassID(this))) {
 						// TFE10000�Ȃǂ̎w�肪��������t��
 						// TODO 20140619_masato bgcolorとか
@@ -259,6 +253,7 @@ public class HTMLG2 extends Grouper implements Serializable {
 			Log.out("<TABLE class=\"" + HTMLEnv.getClassID(this) + "\">");
 
 			while (this.hasMoreItems()) {
+
 				// 20140528_masato
 				count++;
 				// System.out.println(html_env.gLevel);
@@ -277,12 +272,13 @@ public class HTMLG2 extends Grouper implements Serializable {
 					//
 					// } else {
 					if (html_env.decorationStartFlag.size() > 0) {
+
 						HTMLDecoration.ends.get(0).append("<TR><TD class=\"" + HTMLEnv.getClassID(tfe) + " nest\">\n");
 					} else {
-//						if(!((ExtList)data.get(dindex)).get(0).toString().equals("dummydummydummy")){
-							html_env.code.append("<TR><TD class=\""
-									+ HTMLEnv.getClassID(tfe) + " nest\">\n");
-//						}
+						//						if(!((ExtList)data.get(dindex)).get(0).toString().equals("dummydummydummy")){
+						html_env.code.append("<TR><TD class=\""
+								+ HTMLEnv.getClassID(tfe) + " nest\">\n");
+						//						}
 					}
 					Log.out("<TR><TD class=\"" + HTMLEnv.getClassID(tfe)
 					+ " nest\">");
@@ -305,26 +301,26 @@ public class HTMLG2 extends Grouper implements Serializable {
 						html_env2.code.append(" valign=\""
 								+ decos.getStr("tablevalign") + "\"");
 
-//					if (decos.containsKey("class")) {
-//						html_env2.code.append(" class=\"");
-//						html_env2.code.append(decos.getStr("class") + " ");
-//					}
+					//					if (decos.containsKey("class")) {
+					//						html_env2.code.append(" class=\"");
+					//						html_env2.code.append(decos.getStr("class") + " ");
+					//					}
 					if (decos.containsKey("class")) {
 						html_env2.code.append(" class=\"");//kotani_idmodifier_ok
 						html_env2.code.append(Modifier.getClassModifierValue(decos)+ " ");//ここでclassを中途半端に書く
 					}
-					
+
 					if (html_env.writtenClassId.contains(HTMLEnv
 							.getClassID(this))) {
-//						if (decos.containsKey("class")) {
-//							html_env2.code.append(HTMLEnv.getClassID(this)
-//									+ "\"");
-//						} else {
-//							html_env2.code.append(" class=\""
-//									+ HTMLEnv.getClassID(this) + "\"");
-//						}
+						//						if (decos.containsKey("class")) {
+						//							html_env2.code.append(HTMLEnv.getClassID(this)
+						//									+ "\"");
+						//						} else {
+						//							html_env2.code.append(" class=\""
+						//									+ HTMLEnv.getClassID(this) + "\"");
+						//						}
 						html_env2.code.append(Modifier.getClassName(decos, HTMLEnv.getClassID(this)));//kotani_idmodifier_ok
-						
+
 					} else if (decos.containsKey("class")) {
 						html_env2.code.append("\"");
 					}

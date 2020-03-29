@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 
-import com.ibm.db2.jcc.am.de;
-
 import supersql.codegenerator.Compiler.Compiler;
 import supersql.codegenerator.Compiler.JSP.JSPFactory;
 import supersql.codegenerator.Compiler.PHP.PHP;
@@ -13,7 +11,11 @@ import supersql.codegenerator.Compiler.Rails.RailsFactory;
 import supersql.codegenerator.HTML.HTMLFactory;
 import supersql.codegenerator.Mobile_HTML5.Mobile_HTML5Factory;
 import supersql.codegenerator.PDF.PDFFactory;
+import supersql.codegenerator.VR.VRAttribute;
 import supersql.codegenerator.VR.VRFactory;
+import supersql.codegenerator.VR.VRManager;
+import supersql.codegenerator.VR.VRcjoinarray;
+import supersql.codegenerator.VR.VRfilecreate;
 import supersql.codegenerator.Web.WebFactory;
 import supersql.codegenerator.X3D.X3DFactory;
 import supersql.common.GlobalEnv;
@@ -21,10 +23,12 @@ import supersql.common.LevenshteinDistance;
 import supersql.common.Log;
 import supersql.common.ParseXML;
 import supersql.common.Ssedit;
-import supersql.ctab.Ctab;
+import supersql.dataconstructor.Ctab;
 import supersql.extendclass.ExtList;
 import supersql.parser.Preprocessor;
 import supersql.parser.Start_Parse;
+
+import supersql.dataconstructor.Limiter;
 
 
 public class CodeGenerator {
@@ -38,7 +42,7 @@ public class CodeGenerator {
 	private static String media;
 
 	static Factory factory;
-	
+
 	public static boolean sqlfunc_flag = false;
 
 	//	private static boolean decocheck = false;
@@ -48,7 +52,14 @@ public class CodeGenerator {
 	public static ExtList schema;
 	public static Manager manager;
 	public static int TFEid;
+	public static ExtList keys;//added by taji 171102
 
+	//module20180506 kotani
+	public static int filenum;
+//	public static ArrayList<String> filecon= new ArrayList<>();//mediaが一致したファイルの中身
+	public static String[] filesplit;
+
+	public static boolean limitFlag;
 
 	public void CodeGenerator(Start_Parse parser) {
 		attno = 0;
@@ -77,17 +88,121 @@ public class CodeGenerator {
 	public static void setFactory(String media) {
 		if (media.toLowerCase().equals("html")) {
 			factory = new HTMLFactory();
+			Ehtml.setType(0, 0);
+			// Sass.bootstrapFlg(true);	// OK?
 		}else if(media.toLowerCase().equals("mobile_html5")){
 			factory = new Mobile_HTML5Factory();
+			Ehtml.setType(1, 1);
+			// Sass.bootstrapFlg(true);	// OK?
 		} else if (media.toLowerCase().equals("bhtml") || media.toLowerCase().equals("html_bootstrap") || media.toLowerCase().equals("responsivehtml")|| media.toLowerCase().equals("responsive_html")) {
 			factory = new Mobile_HTML5Factory();
+			Ehtml.setType(1, 1);
 			Sass.bootstrapFlg(true);
 		}else if(media.toLowerCase().equals("web")) {
 			factory = new WebFactory();
 		}else if(media.toLowerCase().equals("x3d")){
 			factory = new X3DFactory();
-		}else if(media.toLowerCase().equals("vr") || media.toLowerCase().equals("unity")){
+		}else if(media.toLowerCase().equals("vr_museum") || media.toLowerCase().equals("unity_museum")){
+			VRcjoinarray.gLemaxlist.add(0);
+			VRcjoinarray.getJoin();
+			VRcjoinarray.getexhJoin();
+			VRAttribute.genrearray22.add(0);
+			VRManager.vrflag = true;
 			factory = new VRFactory();
+			VRfilecreate.scene = "museum";//VRfilecreateのためのフラグ
+			for(int i=1; i<=VRAttribute.cjoinarray.size()+1; i++){//あとで書き換え
+				VRfilecreate.template_scene[i] = "Type_museum";//museum
+				VRfilecreate.template_stand[i] = "Type_museum";//stand
+				VRfilecreate.room_sizex[i] = 50;
+				VRfilecreate.room_sizey[i] = 20;
+				VRfilecreate.room_sizez[i] = 30;
+				VRfilecreate.stand_sizex[i] = VRfilecreate.stand_sizez[i] = 1.3f;
+				VRfilecreate.stand_sizey[i] = 2;
+			}
+		}else if(mediaUnityModule(media)){//mediaとメディア名いれたarraylistを比較してtrueを返す
+			VRcjoinarray.gLemaxlist.add(0);
+			VRcjoinarray.getJoin();
+			VRcjoinarray.getexhJoin();
+			VRAttribute.genrearray22.add(0);
+			VRManager.vrflag = true;
+			factory = new VRFactory();
+			VRManager.VRmoduleflag = true;//この後VRでもしmoduleがあったらみたいな感じで場合分けして、変数代入していく
+			//一致したメディアを特定。そのfileconを改行ごとに配列に入れていく
+			filesplit = GlobalEnv.multifilecon.get(filenum).split("\n");
+			//メディア名のarraylistで2番目が一致したとする。そっからは他の変数のarraylistでも2番目のを持ってきて、それを変数として扱う
+			for(int i=1; i<=VRAttribute.cjoinarray.size()+1; i++){//あとで書き換え
+				VRfilecreate.template_scene[i] = VRfilecreate.template_stand[i] = VRfilecreate.template_wallstand[i] = "Type_museum";
+				VRfilecreate.light_r[i] = VRfilecreate.light_g[i] = VRfilecreate.light_b[i] = "255";
+				VRfilecreate.exh_distancex[i] = VRfilecreate.exh_distancey[i] = VRfilecreate.exh_distancez[i] = "5";
+				VRfilecreate.room_sizex[i] = 50;
+				VRfilecreate.roomx[i] = VRfilecreate.room_sizex[i]/2-5;
+				VRfilecreate.room_sizey[i] = 20;
+				VRfilecreate.room_sizez[i] = 30;
+				VRfilecreate.roomz[i] = VRfilecreate.room_sizez[i]/2-5;
+				VRfilecreate.stand_sizex[i] = VRfilecreate.stand_sizez[i] = 1.3f;
+				VRfilecreate.stand_sizey[i] = 2;
+				//ここから壁
+				VRfilecreate.picture_sizex[i] = 2;//2D
+				VRfilecreate.wallstand_sizex[i] = VRfilecreate.wallstand_sizey[i] = VRfilecreate.wallstand_sizez[i]= 2;//3D
+				VRfilecreate.wallexh_distancex[i] = VRfilecreate.wallexh_distancey[i] = 4;//3Dと2D共通
+				VRfilecreate.wallexh_high[i] = 1;
+			}
+			for(int i=1; i<=VRAttribute.cjoinarray.size()+1; i++){
+				for(int j=0; j<filesplit.length;j++){
+					String[] str = filesplit[i].split("=");
+					if(str[0].trim().equals("template_scene"))
+						VRfilecreate.template_scene[i] = str[1].trim();
+					if(str[0].trim().equals("template_stand"))
+						VRfilecreate.template_stand[i] = str[1].trim();
+					if(str[0].trim().equals("LightColor.r"))
+						VRfilecreate.light_r[i] = str[1].trim();
+					if(str[0].trim().equals("LightColor.g"))
+						VRfilecreate.light_g[i] = str[1].trim();
+					if(str[0].trim().equals("LightColor.b"))
+						VRfilecreate.light_b[i] = str[1].trim();
+					if(str[0].trim().equals("picture_size.x"))
+						VRfilecreate.picture_sizex[i] = Float.valueOf(str[1].trim());
+					if(str[0].trim().equals("picture_distance.y"))
+						VRfilecreate.exh_distancex[i] = str[1].trim();
+					if(str[0].trim().equals("exhibition_distance.y"))
+						VRfilecreate.exh_distancey[i] = str[1].trim();
+					if(str[0].trim().equals("exhibition_distance.z"))
+						VRfilecreate.exh_distancez[i] = str[1].trim();
+					if(str[0].trim().equals("room_size.x")){
+						VRfilecreate.room_sizex[i] = Float.valueOf(str[1].trim());
+						VRfilecreate.roomx[i] = VRfilecreate.room_sizex[i]/2-5;
+					}
+					if(str[0].trim().equals("room_size.y"))
+						VRfilecreate.room_sizey[i] = Float.valueOf(str[1].trim());
+					if(str[0].trim().equals("room_size.z")){
+						VRfilecreate.room_sizez[i] = Float.valueOf(str[1].trim());
+						VRfilecreate.roomz[i] = VRfilecreate.room_sizez[i]/2-5;
+					}
+					if(str[0].trim().equals("stand_size.x"))
+						VRfilecreate.stand_sizex[i] = Float.valueOf(str[1].trim());
+					if(str[0].trim().equals("stand_size.y"))
+						VRfilecreate.stand_sizey[i] = Float.valueOf(str[1].trim());
+					if(str[0].trim().equals("stand_size.z"))
+						VRfilecreate.stand_sizez[i] = Float.valueOf(str[1].trim());
+					//ここから壁
+					if(str[0].trim().equals("template_wallstand"))
+						VRfilecreate.template_wallstand[i] = str[1].trim();
+					if(str[0].trim().equals("picture_size.x"))
+						VRfilecreate.picture_sizex[i] = Float.valueOf(str[1].trim());
+					if(str[0].trim().equals("wallstand_size.x"))
+						VRfilecreate.wallstand_sizex[i] = Float.valueOf(str[1].trim());
+					if(str[0].trim().equals("wallstand_size.y"))
+						VRfilecreate.wallstand_sizey[i] = Float.valueOf(str[1].trim());
+					if(str[0].trim().equals("wallstand_size.z"))
+						VRfilecreate.wallstand_sizez[i] = Float.valueOf(str[1].trim());
+					if(str[0].trim().equals("wallexh_distance.x"))
+						VRfilecreate.wallexh_distancex[i] = Float.valueOf(str[1].trim());
+					if(str[0].trim().equals("wallexh_distance.y"))
+						VRfilecreate.wallexh_distancey[i] = Float.valueOf(str[1].trim());
+					if(str[0].trim().equals("wallexh_high"))
+						VRfilecreate.wallexh_high[i] = Float.valueOf(str[1].trim());
+				}
+			}
 		}else if(media.toLowerCase().equals("pdf")){
 			factory = new PDFFactory();
 		}else if(media.toLowerCase().equals("php")){	//added by goto 20161104
@@ -133,108 +248,31 @@ public class CodeGenerator {
 	public static void initialize(Start_Parse parser){
 		attp = new Hashtable();
 		ExtList tfe = (ExtList)parser.list_tfe.get(1);
-
 		media = ((ExtList) parser.list_media.get(1)).get(1).toString();
 		setFactory(media);
+//		System.exit(0);
 		initiate();
-
 		schemaTop = initialize((ExtList)tfe.get(0));
-
 		sch = schemaTop.makesch();
+
 		schema = schemaTop.makeschImage();
 		Log.info("Schema is " + sch);
 		Log.info("le0 is " + schemaTop.makele0());
-
-		
-		// 2016/12/16 commentout by taji
-//		ExtList test = reverse(schemaTop.makele0());
-//		Log.info("test:" + test);
-//		Log.info( getText(test, Start_Parse.ruleNames) );
 
 		parser.schemaTop = schemaTop;
 		parser.sch = sch;
 		parser.schema = schema;
 	}
 
-	// 2016/12/16 commentout by taji
-//	private static ExtList reverse(ExtList extlist){
-//		ExtList tmp = new ExtList();
-//		if(extlist.get(0).toString().endsWith("G2")){
-//			tmp.add("grouper");
-//			ExtList G = new ExtList();
-//			G.add("[");
-//			G.add( reverse((ExtList)extlist.get(1)) );
-//			G.add("]");
-//			G.add("!");
-//			tmp.add(G);
-//		}else if(extlist.get(0).toString().endsWith("G1")){
-//			tmp.add("grouper");
-//			ExtList G = new ExtList();
-//			G.add("[");
-//			G.add( reverse((ExtList)extlist.get(1)) );
-//			G.add("]");
-//			G.add(",");
-//			tmp.add(G);
-//		}else if(extlist.get(0).toString().endsWith("C2")){
-//			ExtList C = new ExtList();
-//			tmp.add("v_exp");
-//			for(int i = 1; i < extlist.size(); i++){
-//				C.add(reverse((ExtList)extlist.get(i)));
-//				if(i != extlist.size() - 1){
-//					C.add("!");
-//				}
-//			}
-//			tmp.add(C);
-//		}else if(extlist.get(0).toString().endsWith("C1")){
-//			ExtList C = new ExtList();
-//			tmp.add("h_exp");
-//			for(int i = 1; i < extlist.size(); i++){
-//				C.add(reverse((ExtList)extlist.get(i)));
-//				if(i != extlist.size() - 1){
-//					C.add(",");
-//				}
-//			}
-//			tmp.add(C);
-//		}
-//		else if(extlist.size() > 1){//function?
-//			ExtList F = new ExtList();
-//			for(int i = 0; i < extlist.size(); i++){
-//				if(extlist.get(i) instanceof ExtList){
-//					F.add(reverse((ExtList)extlist.get(i)));
-//				}else{
-//					ExtList temp1 = new ExtList();
-//					temp1.add(extlist.get(i));
-//					F.add(reverse(temp1));
-//				}
-//				if(i != extlist.size() - 1){
-//					F.add(",");
-//				}
-//			}
-//			tmp.add(F);
-//		}
-//		else if( extlist.get(0) instanceof Integer ){
-//			ExtList A = new ExtList();
-//			A.add(attp.get(extlist.get(0)).toString());
-//			tmp.add("operand");
-//			tmp.add(A);
-//		}else if( extlist.get(0) instanceof String ){
-//			ExtList S = new ExtList();
-//			S.add( "\"" + extlist.get(0) + "\"" );
-//			tmp.add("operand");
-//			tmp.add(S);
-//		}
-//
-//		return tmp;
-//	}
+
 
 	public Hashtable get_attp() {
 		return this.attp;
 	}
 
 	public void generateCode(Start_Parse parser, ExtList data_info) {
-
 		ITFE tfe_info = parser.get_TFEschema();
-
+//		Log.info("2-2-3-1-1");
 		//	ɬ�פʤ饳���ȥ����ȳ�����Manager������ѹ�
 		//	manager.preProcess(tab,le,le1,le2,le3);
 		//	manager.createSchema(tab,le,le1,le2,le3);
@@ -242,8 +280,10 @@ public class CodeGenerator {
 		if (tfe_info instanceof Grouper && data_info.size() != 0) {
 			data_info = (ExtList) data_info.get(0);
 		}
+//		Log.info("2-2-3-1-2");
 
 		manager.generateCode(tfe_info, data_info);
+//		Log.info("2-2-3-1-3");
 
 		manager.finish();
 
@@ -355,7 +395,6 @@ public class CodeGenerator {
 	}
 //	public static boolean flag = true;
 	private static TFE read_attribute(ExtList tfe_tree){
-		
 		String att = new String();
 		TFE out_sch = null;
 		String decos = new String();
@@ -366,10 +405,23 @@ public class CodeGenerator {
 //			Log.info("tfe:"+tfe_tree);
 //			flag = !flag;
 //		}
+//		Log.info("tfe_tree"+tfe_tree);
 		Asc_Desc ascDesc = new Asc_Desc();
-
-		
+//		Log.info("ExtList:"+tfe_tree.getExtList(new int[]{1, 0}));
+//		Log.info("String:"+tfe_tree.getExtListString(new int[] {1, 0, 0}));
+//		Log.info("tfe_tree:"+tfe_tree);
 		if(tfe_tree.get(0).toString().equals("operand")){
+			if (tfe_tree.getExtListString(tfe_tree.size() - 1) instanceof String) {
+				if(tfe_tree.getExtListString(tfe_tree.size() - 1).equals("ggplot_att")) {
+					add_deco = true;
+					if(decos.isEmpty()){
+						decos = "ggplot";
+					}else{
+						decos = decos + ",ggplot";
+					}
+				}
+			}
+
 			if( ((ExtList)tfe_tree.get(1)).get(((ExtList)tfe_tree.get(1)).size()-1) instanceof String  && !tfe_tree.contains("true")
 					&& (decos = ((ExtList)tfe_tree.get(1)).get(((ExtList)tfe_tree.get(1)).size()-1).toString().trim()).startsWith("@")
 					){
@@ -377,6 +429,7 @@ public class CodeGenerator {
 				//					Log.info(new_out);
 				out_sch = read_attribute(new_out);
 			}
+
 			else if( ((ExtList)tfe_tree.get(1)).get(0) instanceof String ){
 				if(((ExtList)tfe_tree.get(1)).get(0).toString().equals("{")){
 					((ExtList)tfe_tree.get(1)).remove(0);
@@ -397,6 +450,7 @@ public class CodeGenerator {
 					((ExtList)tfe_tree.get(1)).remove(0);
 				}
 				if( ((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(0).toString().equals("aggregate") ){
+
 					if(decos.isEmpty()){
 						decos = ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(0)).get(1)).get(0)).get(1)).get(0).toString();
 					}else{
@@ -405,58 +459,76 @@ public class CodeGenerator {
 					add_deco = true;
 					ExtList att1 = new ExtList();
 					String dec_tmp = ((ExtList)tfe_tree.get(1)).get(((ExtList)tfe_tree.get(1)).size() - 1).toString();
-					
-//					if( ((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(2)).get(0).toString().equals("table_alias") ){
-//						att1.add((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(2));
-//						att1.add(((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(3));
-//						att1.add((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(4));
-//					}else{
+
 					att1.add((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(2));
 //					}
 					tfe_tree.remove(1);
-					Log.info(tfe_tree);
+//					Log.info(tfe_tree);
 					int i = tfe_tree.indexOf("true");
 					if(i > 0){
 						tfe_tree.remove(i);
 					}
-					
 					tfe_tree.add(att1);
 					if(dec_tmp.startsWith("@{")){
 						tfe_tree.add(tfe_tree.size(), "true");
 						((ExtList)tfe_tree.get(1)).add(((ExtList)tfe_tree.get(1)).size(), dec_tmp);
 					}
-					
-					
-					//					Log.info(tfe_tree);
+//										Log.info(tfe_tree);
+
+
 				}
-				if( ((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(0).toString().equals("join_string") ){
-					String operand = getText((ExtList)((ExtList)tfe_tree.get(1)).get(0), Start_Parse.ruleNames);
-					builder = new String();
-					Attribute Att = makeAttribute(operand);
-					out_sch = Att;
-				}
-				else if( ((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(0).toString().equals("attribute") ){
-//					att = ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(0)).get(1)).get(0).toString();
-//					att = att + ((ExtList)tfe_tree.get(1)).get(1).toString();
-//					if( ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(2)).get(1)).get(0)).get(1)).get(0) instanceof ExtList){
-//						att = att + ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(2)).get(1)).get(0)).get(1)).get(0)).get(1)).get(0);
+
+				if( ((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(0).toString().equals("ggplot") ){
+//					if(decos.isEmpty()){
+//						decos = ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(0)).get(1)).get(0)).get(1)).get(0).toString();
 //					}else{
-//						att = att + ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(2)).get(1)).get(0)).get(1)).get(0);
+//						decos = decos + "," + ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(0)).get(1)).get(0)).get(1)).get(0).toString();
 //					}
+//					add_deco = true;
+					ExtList att1 = new ExtList();
+					ExtList att2 = new ExtList();
+					ExtList tfe_tree_buf = new ExtList();
+					String dec_tmp = ((ExtList)tfe_tree.get(1)).get(((ExtList)tfe_tree.get(1)).size() - 1).toString();
+					String gg_decos;
+
+					att1.add("operand");
+					att1.add(new ExtList());
+					att1.getExtList(1).add(tfe_tree.getExtList(1, 0, 1, 2));
+					att1.add("ggplot_att");
+					att2.add("operand");
+					att2.add(new ExtList());
+					att2.getExtList(1).add(tfe_tree.getExtList(1, 0, 1, 4));
+					att2.add("ggplot_att");
+
+//					}
+
+
+					tfe_tree_buf.add("h_exp");
+					tfe_tree_buf.add(new ExtList());
+					tfe_tree_buf.getExtList(1).add(att1);
+					tfe_tree_buf.getExtList(1).add(tfe_tree.getExtListString(1, 0, 1, 3));
+					tfe_tree_buf.getExtList(1).add(att2);
+
+//					tfe_tree.clear();
+
+//					tfe_tree = tfe_tree_buf;
+					out_sch = read_attribute(tfe_tree_buf);
+
+					//					Log.info(tfe_tree);
+					try {
+						gg_decos = tfe_tree.getExtListString(1, 1).substring(2, tfe_tree.getExtListString(1, 1).length() - 1);
+						Preprocessor.putGGplotDeco(splitComma(gg_decos));
+					} catch (IndexOutOfBoundsException e) {
+						System.out.println(e);
+					}
+				}
+
+				if( ((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(0).toString().equals("attribute") ){
 					att = getText((ExtList)((ExtList)tfe_tree.get(1)).get(0), Start_Parse.ruleNames);
 					builder = new String();
 					Attribute Att = makeAttribute(att);
 					out_sch = Att;
-//				}else if(((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(0).toString().equals("column_name")){
-//					if( ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(0)).get(1)).get(0) instanceof ExtList){
-//						//						Log.info( ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(0)).get(1)).get(0)).get(1)).get(0) );
-//						att = ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(0)).get(1)).get(0)).get(1)).get(0).toString();
-//					}else{
-//						att = ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(0)).get(1)).get(0).toString();
-//					}
-//					//					att = ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(0)).get(1)).get(0).toString();
-//					Attribute Att = makeAttribute(att);
-//					out_sch = Att;
+
 				}else if( ((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(0).toString().equals("grouper") ){
 					out_sch = grouper((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1));
 
@@ -477,8 +549,26 @@ public class CodeGenerator {
 					if(func_name.equals("cross_tab")){
 						GlobalEnv env = new GlobalEnv();
 						env.setCtabflag();
+						if(tfe_tree.getExtList(1).size() > 1){
+							String tmp_dec = tfe_tree.getExtListString(1, 1);
+							ArrayList<String> decs = splitComma(tmp_dec);
+							for (int i = 0; i < decs.size(); i++) {
+								if(decs.get(i).contains("null_value")){
+									String tmp_null = decs.get(i).split("=")[1].trim();
+									if(tmp_null.charAt(0) == '"'){
+										GlobalEnv.nullValue = tmp_null.substring(tmp_null.indexOf("\"") + 1, tmp_null.lastIndexOf("\""));
+									}else{
+										GlobalEnv.nullValue = tmp_null.substring(tmp_null.indexOf("'") + 1, tmp_null.lastIndexOf("'"));
+									}
+								}else if (decs.get(i).contains("side_width")){
+									GlobalEnv.sideWidth = Integer.parseInt(decs.get(i).split("=")[1].trim());
+								}
+							}
+						}
 						Ctab ctab = new Ctab();
-						out_sch = read_attribute(ctab.makeCtab(fn));
+						GlobalEnv.setMultiQuery();
+						ExtList result = ctab.makeCtab(fn);
+						out_sch = read_attribute(result);
 					}else{
 						out_sch = func_read((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1));
 						//out_sch = func_read((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).fnc;
@@ -511,10 +601,9 @@ public class CodeGenerator {
 
 				}
 			}
-
 			if( !(((ExtList)tfe_tree.get(1)).get( ((ExtList)tfe_tree.get(1)).size() - 1 ) instanceof ExtList) ){
 				String deco = ((ExtList)tfe_tree.get(1)).get( ((ExtList)tfe_tree.get(1)).size() - 1 ).toString();
-				
+//				System.out.println("tfe_tree_deco1:::"+tfe_tree);
 				if(deco.contains("@{")){
 					//changed by goto 20161205
 					ascDesc.add_asc_desc_Array(deco);
@@ -523,11 +612,18 @@ public class CodeGenerator {
 						deco = deco.substring(0, deco.lastIndexOf("}")) + "," + decos + "}";
 						setDecoration(out_sch, deco);
 					}else{
+						limitFlag = false;
 						setDecoration(out_sch, deco);
+						if(limitFlag){
+							GlobalEnv.limit.get(GlobalEnv.limit.size() - 1).findGrouper(tfe_tree.get(1).toString());
+						}
+						limitFlag = false;
 					}
 				}
+//				System.out.println("tfe_tree_deco2:::"+tfe_tree);
 			}else if(add_deco){
 				String deco = "@{" + decos + "}";
+
 				setDecoration(out_sch, deco);
 			}
 		}else if(tfe_tree.get(0).toString().equals("Decoration")){
@@ -541,7 +637,13 @@ public class CodeGenerator {
 			}else{
 				out_sch = decoration((ExtList)tfe_tree.get(1), 1);
 			}
-		}else if(tfe_tree.get(0).toString().equals("n_exp")){
+		}
+		//tbt add 180806
+		else if(tfe_tree.get(0).toString().equals("concat_exp")){
+			out_sch = connector_main((ExtList)tfe_tree.get(1), -1);
+		}
+		//tbt end
+		else if(tfe_tree.get(0).toString().equals("n_exp")){
 			out_sch = connector_main((ExtList)tfe_tree.get(1), 0);
 		}else if(tfe_tree.get(0).toString().equals("h_exp")){
 			if( ((ExtList)tfe_tree.get(1)).size() == 1 ){
@@ -551,8 +653,9 @@ public class CodeGenerator {
 				//				Log.info(tfe_tree);
 				Attribute WS = makeAttribute(((ExtList)tfe_tree.get(1)).get(0).toString());
 				out_sch = WS;
-			}else
+			}else {
 				out_sch = connector_main((ExtList)tfe_tree.get(1), 1);
+			}
 		}else if(tfe_tree.get(0).toString().equals("v_exp")){
 			if( ((ExtList)tfe_tree.get(1)).size() == 1 )
 				out_sch = read_attribute( (ExtList)((ExtList)tfe_tree.get(1)).get(0) );
@@ -563,13 +666,14 @@ public class CodeGenerator {
 				out_sch = read_attribute( (ExtList)((ExtList)tfe_tree.get(1)).get(0) );
 			}else
 				out_sch = connector_main((ExtList)tfe_tree.get(1), 3);
-		}else if(tfe_tree.get(0).toString().equals("expr")){
-			int idx = ((ExtList)tfe_tree.get(1)).indexOf("=");
-			out_sch = read_attribute( (ExtList)((ExtList)tfe_tree.get(1)).get(idx+1) );
+		}else if(tfe_tree.get(0).toString().equals("expr")) {
+			int idx = ((ExtList) tfe_tree.get(1)).indexOf("=");
+			out_sch = read_attribute((ExtList) ((ExtList) tfe_tree.get(1)).get(idx + 1));
 		}
 		else{
 			out_sch = makeschematop((ExtList)((ExtList)tfe_tree.get(1)).get(0));
 		}
+
 		return out_sch;
 	}
 
@@ -647,11 +751,18 @@ public class CodeGenerator {
 		ExtList atts = new ExtList();
 
 		for(int i = 0; i <= operand.size(); i++){
+//			System.out.println("operand.get(i): " + operand.get(i));
+//			System.out.println("operand.get(i) class: " + operand.get(i).getClass());
+			if(operand.get(i).equals(",")) {
+//				System.out.println("operand.get(i+1): " + operand.get(i+1));
+//				System.out.println("operand.get(i+1) class: " + operand.get(i+1).getClass());
+			}
 			TFE att = read_attribute((ExtList)operand.get(i));
 			atts.add(att);
 			i++;
 		}
 		//		decocheck =false;
+//		System.out.println("atts:::"+atts);
 		Connector con = createconnector(dim);
 
 		for (int i = 0; i < atts.size(); i++) {
@@ -693,45 +804,124 @@ public class CodeGenerator {
 			}
 		}
 
-		if(iterators.get(0).equals(",")){
-			deco = "column=";
-			iterators.remove(0);
-			deco = deco + iterators.get(0);
-			iterators.remove(0);
-			if(iterators.get(0).equals("!")){
-				iterators.remove(0);
-				if(iterators.isEmpty()){
-				}else{
-					deco = deco + ",row=" + iterators.get(0);
-					iterators.remove(0);
-				}
-			}else if(iterators.get(0).equals("%")){
-				iterators.remove(0);
-				deco = deco + ", row=1";
-			}else if(iterators.get(0).equals(",")){//for infinite scroll
-				deco = "infinite-scroll" + deco.substring(deco.indexOf("="));
-				deco = deco + ", dynamic";
-			}
-		}else if(iterators.get(0).equals("!")){
-			deco = "row=";
-			iterators.remove(0);
-			deco = deco + iterators.get(0);
-			iterators.remove(0);
+		if(VRManager.vrflag){///vrの時 複合反復で使う
+			/////for VR  column->row_x, row->vr_y
 			if(iterators.get(0).equals(",")){
+				deco = "vr_x=";
 				iterators.remove(0);
-				if(iterators.isEmpty()){
-				}else{
-					deco = deco + ",column=" + iterators.get(0);
+				deco = deco + iterators.get(0);
+				iterators.remove(0);
+				if(iterators.get(0).equals("!")){//xy
 					iterators.remove(0);
+					if(iterators.isEmpty()){
+						deco = deco + ", vr_y=-1";////////,5!みたいな方 -1って印つける
+					}else{
+						deco = deco + ",vr_y=" + iterators.get(0);//,5!3%みたいな方
+						iterators.remove(0);
+					}
+				}else if(iterators.get(0).equals("%")){//xz
+					iterators.remove(0);
+					if(iterators.isEmpty()){
+						deco = deco + ", vr_z=-1";
+					}else{
+						deco = deco + ",vr_z=" + iterators.get(0);
+						iterators.remove(0);
+					}
+//					iterators.remove(0);
+//					deco = deco + ", vr_z=1";
 				}
-			}else if(iterators.get(0).equals("%")){
+			}else if(iterators.get(0).equals("!")){
+				deco = "vr_y=";
 				iterators.remove(0);
-				deco = deco + ", column=1";
-			}else if(iterators.get(0).equals("!")){//for infinite scroll
-				deco = "infinite-scroll" + deco.substring(deco.indexOf("="));
-				deco = deco + "dynamic";
-			}
+				deco = deco + iterators.get(0);
+				iterators.remove(0);
+				if(iterators.get(0).equals(",")){//yx
+					iterators.remove(0);
+					if(iterators.isEmpty()){
+						deco = deco + ", vr_x=-1";//////////////
+					}else{
+						deco = deco + ",vr_x=" + iterators.get(0);
+						iterators.remove(0);
+					}
+				}else if(iterators.get(0).equals("%")){//yz
+					iterators.remove(0);
+					if(iterators.isEmpty()){
+						deco = deco + ", vr_z=-1";
+					}else{
+						deco = deco + ",vr_z=" + iterators.get(0);
+						iterators.remove(0);
+					}
+//					iterators.remove(0);
+//					deco = deco + ", vr_z=1";
+				}
 
+			}else if(iterators.get(0).equals("%")){
+				deco = "vr_z=";
+				iterators.remove(0);
+				deco = deco + iterators.get(0);
+				iterators.remove(0);
+				if(iterators.get(0).equals("!")){//zy
+					iterators.remove(0);
+					if(iterators.isEmpty()){
+						deco = deco + ", vr_y=-1";
+					}else{
+						deco = deco + ",vr_y=" + iterators.get(0);
+						iterators.remove(0);
+					}
+				}else if(iterators.get(0).equals(",")){//zx
+					iterators.remove(0);
+					if(iterators.isEmpty()){
+						deco = deco + ", vr_x=-1";
+					}else{
+						deco = deco + ",vr_x=" + iterators.get(0);
+						iterators.remove(0);
+					}
+//					iterators.remove(0);
+//					deco = deco + ", vr_y=1";
+				}
+			}
+		}else{
+
+			if(iterators.get(0).equals(",")){
+				deco = "column=";
+				iterators.remove(0);
+				deco = deco + iterators.get(0);
+				iterators.remove(0);
+				if(iterators.get(0).equals("!")){
+					iterators.remove(0);
+					if(iterators.isEmpty()){
+					}else{
+						deco = deco + ",row=" + iterators.get(0);
+						iterators.remove(0);
+					}
+				}else if(iterators.get(0).equals("%")){
+					iterators.remove(0);
+					deco = deco + ", row=1";
+				}else if(iterators.get(0).equals(",")){//for infinite scroll
+					deco = "infinite-scroll" + deco.substring(deco.indexOf("="));
+					deco = deco + ", dynamic";
+				}
+			}else if(iterators.get(0).equals("!")){
+				deco = "row=";
+				iterators.remove(0);
+				deco = deco + iterators.get(0);
+				iterators.remove(0);
+				if(iterators.get(0).equals(",")){
+					iterators.remove(0);
+					if(iterators.isEmpty()){
+					}else{
+						deco = deco + ",column=" + iterators.get(0);
+						iterators.remove(0);
+					}
+				}else if(iterators.get(0).equals("%")){
+					iterators.remove(0);
+					deco = deco + ", column=1";
+				}else if(iterators.get(0).equals("!")){//for infinite scroll
+					deco = "infinite-scroll" + deco.substring(deco.indexOf("="));
+					deco = deco + "dynamic";
+				}
+
+			}
 		}
 		operand.add(deco);
 		return operand;
@@ -761,6 +951,10 @@ public class CodeGenerator {
 		}else if(dim == 0){
 			//factory and manager
 			connector = factory.createC0(manager);
+		}else if(dim == -1){
+			//tbt add 180806
+			connector = factory.createConcat(manager);
+			//tbt end
 		}
 		connector.setId(TFEid++);
 		return connector;
@@ -795,10 +989,9 @@ public class CodeGenerator {
 	}
 
 
-	private static Attribute makeAttribute(String token){
+	private static Attribute makeAttribute(String token) {
 		return makeAttribute(token, false);
 	}
-
 	static Attribute makeAttribute(String token, boolean skipCondition) {
 		String line;
 		String name;
@@ -934,28 +1127,26 @@ public class CodeGenerator {
 	static String exprtostring(ExtList expr){
 		String str = null;
 		String att = null;
-		ExtList tfe_tree = (ExtList)((ExtList)((ExtList)expr.get(0)).get(1)).get(0);
-		if(tfe_tree.get(0).toString().equals("operand")){
-			if( ((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(0).toString().equals("table_alias") ){
-				att = ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(0)).get(1)).get(0).toString();
-				att = att + ((ExtList)tfe_tree.get(1)).get(1).toString();
-				if( ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(2)).get(1)).get(0)).get(1)).get(0) instanceof ExtList){
-					att = att + ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(2)).get(1)).get(0)).get(1)).get(0)).get(1)).get(0);
+		ExtList tfe_tree = expr.getExtList(0, 1, 0);
+		if("operand".equals(tfe_tree.getExtListString(0))){
+			ExtList tmp = tfe_tree.getExtList(1, 0, 1);
+			if("table_alias".equals(tmp.getExtListString(0, 0))){
+				att = tmp.getExtListString(0, 1, 0, 1, 0);
+				att = att + tmp.getExtListString(1);
+				if(tmp.getExtListString(2, 1, 0, 1, 0) == null){
+					att = att + tmp.getExtListString(2, 1, 0, 1, 0, 1, 0);
 				}else{
-					att = att + ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(2)).get(1)).get(0)).get(1)).get(0);
+					att = att + tmp.getExtListString(2, 1, 0, 1, 0);
 				}
-				//				att = att + ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(2)).get(1)).get(0)).get(1)).get(0);
-			}else if( ((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(0).toString().equals("column_name") ){
-				if( ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(0)).get(1)).get(0) instanceof ExtList){
-					//					Log.info( ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(0)).get(1)).get(0)).get(1)).get(0) );
-					att = ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(0)).get(1)).get(0)).get(1)).get(0).toString();
+			}else if("column_name".equals(tmp.getExtListString(0, 0))){
+				if(tmp.getExtListString(0, 1, 0, 1, 0) == null){
+					att = tmp.getExtListString(0, 1, 0, 1, 0, 1, 0);
 				}else{
-					att = ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(0)).get(1)).get(0).toString();
+					att = tmp.getExtListString(0, 1, 0, 1, 0);
 				}
-				//				att = ((ExtList)((ExtList)((ExtList)((ExtList)((ExtList)tfe_tree.get(1)).get(0)).get(1)).get(0)).get(1)).get(0).toString();
 			}
 		}
-		str = att + expr.get(1).toString() + ((ExtList)((ExtList)((ExtList)((ExtList)expr.get(2)).get(1)).get(0)).get(1)).get(0).toString();
+		str = att + expr.getExtListString(1) + expr.getExtListString(2, 1, 0, 1, 0);
 		return str;
 	}
 
@@ -985,7 +1176,7 @@ public class CodeGenerator {
 		String token = new String();
 		String name, value;
 		int equalidx;
-		
+
 		if(decos.contains("{") && decos.contains("}"))
 			decos = decos.substring(decos.indexOf("{")+1, decos.lastIndexOf("}"));
 		else
@@ -993,7 +1184,7 @@ public class CodeGenerator {
 
 		//decos.split(",")
 		ArrayList<String> decoList = splitComma(decos);
-		
+//		System.out.println("decoList:::"+decoList);
 		ExtList new_list = new ExtList();
 		ExtList med = new ExtList();
 		extList.add("true");
@@ -1016,7 +1207,7 @@ public class CodeGenerator {
 					continue;
 				}else if(isNumber(value)){
 					continue;
-				}else{
+				}else{//////////////////////////////////////////説明文の文字列連結
 					if(!new_list.contains("Decoration"))
 						new_list.add("Decoration");
 					//value:e.color->[operand, [e.color]]
@@ -1038,14 +1229,14 @@ public class CodeGenerator {
 		}
 	}
 	private static void setDecoration(ITFE tfe, String decos) {
+
 		if(decos.contains("{") && decos.contains("}"))
 			decos = decos.substring(decos.indexOf("{")+1, decos.lastIndexOf("}"));
 		else
 			return;
-		
 		//decos.split(",")
 		ArrayList<String> decoList = splitComma(decos);
-		
+
 		String token = new String();
 		String name, value;
 		int equalidx;
@@ -1055,14 +1246,54 @@ public class CodeGenerator {
 
 			// read name
 			token = decoList.get(i);
-			
+			if (token.toLowerCase().contains("limit")) {
+				Log.out("@ limit found @");
+
+				equalidx = token.indexOf('=');
+				if (equalidx != -1) {
+					// key = idx
+					name = token.substring(0, equalidx).trim();
+					value = token.substring(equalidx + 1).trim();
+					if(value.startsWith("'")){
+						value = value.replaceAll("'", "\"");
+					}
+					Log.out("Value exits.");
+					limitFlag = true;
+					GlobalEnv.limit.add(new Limiter(attno, Integer.parseInt(value)));
+
+				} else {
+					token = token.trim();
+					Log.out("Value does not exit.");
+				}
+			}
+
+
 			//added by goto 170604 for asc/desc@dynamic
 			if (token.toLowerCase().contains("dynamic")) {
 				Log.out("@ dynamic found @");
-				
 				new Asc_Desc().dynamicTokenProcess();
-
 			}
+
+			else if (token.toLowerCase().contains("stream")) {
+				Log.out("@ stream found @");
+
+				equalidx = token.indexOf('=');
+				if (equalidx != -1) {
+					// key = idx
+					name = token.substring(0, equalidx).trim();
+					value = token.substring(equalidx + 1).trim();
+					if(value.startsWith("'")){
+						value = value.replaceAll("'", "\"");
+					}
+					Log.out("Value exits.");
+					new Asc_Desc().streamTokenProcess(value);
+				} else {
+					token = token.trim();
+					Log.out("Value does not exit.");
+					new Asc_Desc().streamTokenProcess("1000");
+				}
+			}
+
 			if (token.toLowerCase().contains("asc") || token.toLowerCase().contains("desc")) {
 				Log.out("@ order by found @");
 
@@ -1080,13 +1311,25 @@ public class CodeGenerator {
             		   toks.lookToken().equalsIgnoreCase("slideshow")*/) {
 
 				Log.out("@ aggregate functions found @");
-				
+
 				decos = decos+",count2";
 				new Preprocessor().setAggregate();
+
 				tfe.setAggregate(token);
+
 				tfe.addDeco(token.toLowerCase(), "");	//added by goto 170604
 
-			}else{
+			 //added by otawa 20181025
+			} else if (token.toLowerCase().contains("ggplot")) {
+				Log.out("@ ggplot found @");
+				new Preprocessor().setGGplot();
+				tfe.setGGplot(token);
+				tfe.addDeco(token.toLowerCase(), "");
+			} else if(token.contains("ctab")){
+				new Preprocessor().setCtab();
+				tfe.setCtab(token);
+				tfe.addDeco(token, "");
+			} else{
 				equalidx = token.indexOf('=');
 				if (equalidx != -1) {
 					// key = idx
@@ -1109,6 +1352,9 @@ public class CodeGenerator {
 	}
 	//split(",")
 	private static ArrayList<String> splitComma(String decos) {
+		if(decos.charAt(decos.length() - 1) == '}'){
+			decos = decos.substring(2, decos.length() - 1);
+		}
 		ArrayList<String> al = new ArrayList<>();
 		Boolean sq = false, dq = false;
 		int lastIndex = 0;
@@ -1127,7 +1373,7 @@ public class CodeGenerator {
 		al.add(decos.substring(lastIndex, decos.length()));
 		return al;
 	}
-	
+
 
 	private CodeGenerator(int id){
 		TFEid = id;
@@ -1196,5 +1442,14 @@ public class CodeGenerator {
 		} catch (NumberFormatException nfex) {
 			return false;
 		}
+	}
+	public static boolean mediaUnityModule(String media){//module
+		for(int i=0; i<GlobalEnv.medialist.size();i++){
+			if(GlobalEnv.medialist.get(i).equals(media)){
+				filenum = i;
+				return true;
+			}
+		}
+		return false;
 	}
 }

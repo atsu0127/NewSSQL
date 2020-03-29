@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- saved from url=(0348)https://s.yimg.jp/images/listing/tool/yads/yads-iframe.html?s=82399_6700&ssl=1&fr_id=yads_8708332-0&p_elem=brapanead&fr_support=1&sb_support=1&enc=UTF-8&tag_path=https%3a%2f%2fyads.yjtag.yahoo.co.jp%2ftag&page=1&u=https%3a%2f%2fwww.yahoo.co.jp%2f&canu=https%3a%2f%2fwww.yahoo.co.jp%2f&ref=https%3a%2f%2fwww.google.com%2f&autoplay_set=1&async=1&mb=1 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="robots" content="noindex,nofollow">
+</head>
+<body style="background-color: transparent; padding: 0px; margin: 0px; text-align: center;">
+
+<div style="margin-left: auto; margin-right: auto;">
+
+<div id="yads-pr-label" style="font-family: &#39;MS PGothic&#39;,sans-serif; font-size: 12px; color: #555555; height:15px; line-height:15px; overflow:hidden; display:none;">PR</div>
+
+<script type="text/javascript">
+function escapeString(in_str, escape_amp) {
+  var escaped_str = in_str.replace(/</g, "&lt;")
+                          .replace(/>/g, "&gt;")
+                          .replace(/"/g, "&quot;")
+                          .replace(/'/g, "&#39;");
+  if (escape_amp) {
+     escaped_str = escaped_str.replace(/&/g, "&amp;");
+  }
+  return escaped_str;
+}
+
+function isSubDomain(in_check, in_trust) {
+  var t = in_trust.split('.');
+  var c = in_check.split('.');
+  if (t.length > c.length) {
+    return false;
+  }
+  for (var i = 0; i < t.length; i++) {
+    if (t[t.length - 1 - i] != c[c.length - 1 - i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function parseQuery(in_url) {
+  var ret = {};
+  var tmp = in_url.split('?');
+  if (tmp.length != 2) {
+    return ret;
+  }
+
+  var params = tmp[1].split('&');
+  for (var i = 0; i < params.length; i++) {
+    var fldVal = params[i].split('=');
+    if (fldVal.length == 1) {
+      ret[fldVal[0]] = '';
+    } else {
+      ret[fldVal[0]] = window.decodeURIComponent(fldVal[1]);
+    }
+  }
+  return ret;
+}
+
+var gAdTagCreater = {
+  printScript : function() { 
+    var url_strings = [];
+    var url_params = parseQuery(location.href);
+    var entry = 'https://yads.yjtag.yahoo.co.jp/tag?'
+
+    for (var f in url_params) {
+      if (f != 'tag_path') {
+        if (f.match(/^[\w-]+$/)) {
+          var v = url_params[f];
+          url_strings.push(f + '=' + window.encodeURIComponent(escapeString(v, false)));
+        }
+      }
+    }
+
+    document.write('<script type="text/javascript" src="'
+                   + entry
+                   + url_strings.join('&amp;')
+                   + '"></scr' + 'ipt>' );
+  },
+  set : function() {
+    this.printScript();
+  }
+};
+
+var proto = location.protocol == 'https:' ? "https:" : "http:";
+var url = proto + '//yads.c.yimg.jp/js/yads.js';
+document.write('<script type="text/javascript" src="' + url + '"></scri' + 'pt>');
+</script><script type="text/javascript" src="./yads.js"></script><script src="./iicon.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+gAdTagCreater.set();
+
+</script><script type="text/javascript" src="./tag"></script><script onerror="gAdController.passback()" type="text/javascript" src="./ttj"></script><script language="javascript" src="./ttj(1)"></script><!-- Creative 40965390 served by Member 3663 via AppNexus. --><script src="./saved_resource" type="text/javascript"></script><div id="yads_dummy_parent_606233133"><div style="margin:0px; font-size:0; text-align:center;">  <div style="display:inline-block; border:none; color:#333; height:auto; line-height:1.0; overflow:hidden; position:relative; width:100%; max-width:350px; margin:0 auto; text-align:center;">    <a href="https://rd.ane.yahoo.co.jp/rd?ep=bSqRQCxN4hjUuqldSk5.nMilMi8QKaWTcx7xvLBvg7EPbxIqLl4Jef6s3kp1welv.Gbj4X2jCNGKxS1yTTIHBbw4E.7PAG15b9eDAVLMr5lfkiw8I56IgKfN1iRB91mDX3zEfSQxLZIwuiBh5_cLq3AeqEssaTSFlCeGFxFFUeLLwqaNAkWnYAJzDQuVd32ryRYbW.C6bSu9RgPpFEYmmKDLH7HVLjimOYK25w.vGnOv.bARBkDlbls3rpX01L3prtsNKfeDlUsHfhgGd1NkA.wT_rHjdHqnmx7INTbLWjsRt2sIjMFu5IsUhPODkpQTzm7jvzbPChaKat2gitNvpAuELVYGq7HR_FZiW3MMt_e0LRHFt58dJt5bPv9YTvROPdbVLd1vKbz.YJUgwg.BSJDwBeaHbAwvOAf.wMKd3lBNplyy5RyoYllxs3mWuR2qGim8PBFRAEoNA9s3vUE9ObSGIhv17TJuiJ9H4wtanlmhOqPSpWw58XyrD7ASUMJQvyum_cjM0M8jeVscpr6XBK1arY6vFaZMaqCT3jG5MqP5jpYiDPz_GjhIT5u3aTkh7ZEbGm9bbrXe8x9jCw2OTUJDsvddUtuDVzjCybHW0E4UgkNERq6oQ9IzDa5oJEYXAXr1phhVPAsgGI.aIgcZT96Sx4Rhn9WaY3CxDlOMuKndAy3kL5BK8U6Izf22xoOT5lfKkHZg57fs1vVp3hJTO.Iq9h0LbHuhq6qAi1WnAjf1.bwkpXJZ9FDiUPyfegWqA8Jv_dr2DiatLKmQ.gYNhRXqz9Gpkg3JaYx7JT7Uk8MFZsiG0s5sHlzlcxHIJa2BDTma6thSWPYVaGzFvQ9xFBGIxNKWwde6qkOKZyJ7idBJ9B.ZZpHoyHvQgH7N9aC_YTKrBBygicB0W4_KJx2T0CXHn9GQqxVq.pJy.Glc32ed.F2RjM4OKcrA6kBnFyeUYsdXrxpsumPgsVsjqjLdtyGqvqL7dd28dES9xMT1ri99vP5tUxBgE9GEu3x46uHL_Z41TyraDlDDfwm9fZPfDGZmRbv8ADmz_ZLArPYBAfK77lz.7nwjRCU.CkHiA5_lMJV2faPw9sfeyHVKug--&amp;a=12rLLhc_xD1wPPVB5g--&amp;s=Z2n3Gts5k2gaMg--&amp;t=HcTRQqJhwyu7&amp;ifa=VG8mDFM-&amp;cv_label=9fWBYQBN9g.U&amp;tpl_id=qnfPzi08&amp;tpl_path=VG8mDFM-&amp;ctv_optmz=4bAM5jY9&amp;disp_atime=OogdYkk9k2jBZ81ZuUDK&amp;vflg=4bAM5jY9&amp;C=9&amp;D=1&amp;F=0&amp;I=&amp;RI=7aff8d3fcf5ca8d7ba1ca38cb2b86266&amp;S=&amp;as=2&amp;etlid=0&amp;f=65536&amp;ff=1&amp;fq_d=1%2C1%2C1%2C0&amp;fq_m=1%2C2%2C2%2C0&amp;fq_w=1%2C1%2C1%2C0&amp;g=58&amp;lp=https%3A%2F%2Fh5.g123.jp%2Fgame%2Fvividarmy%3Fplatform%3Dydpcbp&amp;maf=31&amp;mid=5952946&amp;o=9&amp;p=9&amp;qfid=301968&amp;r=&amp;rfm=1_2&amp;sfid=301968&amp;skwid=0&amp;tlid=0&amp;u=toppage.yahoo.co.jp&amp;yads_ds=82399_6700&amp;v=2" data-ydn-lp="https://h5.g123.jp/game/vividarmy?platform=ydpcbp" data-ydn-rd="https://rd.ane.yahoo.co.jp/rd?ep=bSqRQCxN4hjUuqldSk5.nMilMi8QKaWTcx7xvLBvg7EPbxIqLl4Jef6s3kp1welv.Gbj4X2jCNGKxS1yTTIHBbw4E.7PAG15b9eDAVLMr5lfkiw8I56IgKfN1iRB91mDX3zEfSQxLZIwuiBh5_cLq3AeqEssaTSFlCeGFxFFUeLLwqaNAkWnYAJzDQuVd32ryRYbW.C6bSu9RgPpFEYmmKDLH7HVLjimOYK25w.vGnOv.bARBkDlbls3rpX01L3prtsNKfeDlUsHfhgGd1NkA.wT_rHjdHqnmx7INTbLWjsRt2sIjMFu5IsUhPODkpQTzm7jvzbPChaKat2gitNvpAuELVYGq7HR_FZiW3MMt_e0LRHFt58dJt5bPv9YTvROPdbVLd1vKbz.YJUgwg.BSJDwBeaHbAwvOAf.wMKd3lBNplyy5RyoYllxs3mWuR2qGim8PBFRAEoNA9s3vUE9ObSGIhv17TJuiJ9H4wtanlmhOqPSpWw58XyrD7ASUMJQvyum_cjM0M8jeVscpr6XBK1arY6vFaZMaqCT3jG5MqP5jpYiDPz_GjhIT5u3aTkh7ZEbGm9bbrXe8x9jCw2OTUJDsvddUtuDVzjCybHW0E4UgkNERq6oQ9IzDa5oJEYXAXr1phhVPAsgGI.aIgcZT96Sx4Rhn9WaY3CxDlOMuKndAy3kL5BK8U6Izf22xoOT5lfKkHZg57fs1vVp3hJTO.Iq9h0LbHuhq6qAi1WnAjf1.bwkpXJZ9FDiUPyfegWqA8Jv_dr2DiatLKmQ.gYNhRXqz9Gpkg3JaYx7JT7Uk8MFZsiG0s5sHlzlcxHIJa2BDTma6thSWPYVaGzFvQ9xFBGIxNKWwde6qkOKZyJ7idBJ9B.ZZpHoyHvQgH7N9aC_YTKrBBygicB0W4_KJx2T0CXHn9GQqxVq.pJy.Glc32ed.F2RjM4OKcrA6kBnFyeUYsdXrxpsumPgsVsjqjLdtyGqvqL7dd28dES9xMT1ri99vP5tUxBgE9GEu3x46uHL_Z41TyraDlDDfwm9fZPfDGZmRbv8ADmz_ZLArPYBAfK77lz.7nwjRCU.CkHiA5_lMJV2faPw9sfeyHVKug--&amp;a=12rLLhc_xD1wPPVB5g--&amp;s=Z2n3Gts5k2gaMg--&amp;t=HcTRQqJhwyu7&amp;ifa=VG8mDFM-&amp;cv_label=9fWBYQBN9g.U&amp;tpl_id=qnfPzi08&amp;tpl_path=VG8mDFM-&amp;ctv_optmz=4bAM5jY9&amp;disp_atime=OogdYkk9k2jBZ81ZuUDK&amp;vflg=4bAM5jY9&amp;C=9&amp;D=1&amp;F=0&amp;I=&amp;RI=7aff8d3fcf5ca8d7ba1ca38cb2b86266&amp;S=&amp;as=2&amp;etlid=0&amp;f=65536&amp;ff=1&amp;fq_d=1%2C1%2C1%2C0&amp;fq_m=1%2C2%2C2%2C0&amp;fq_w=1%2C1%2C1%2C0&amp;g=58&amp;lp=https%3A%2F%2Fh5.g123.jp%2Fgame%2Fvividarmy%3Fplatform%3Dydpcbp&amp;maf=31&amp;mid=5952946&amp;o=9&amp;p=9&amp;qfid=301968&amp;r=&amp;rfm=1_2&amp;sfid=301968&amp;skwid=0&amp;tlid=0&amp;u=toppage.yahoo.co.jp&amp;yads_ds=82399_6700&amp;v=2" data-ydn-sb="https://rd.ane.yahoo.co.jp/rd?ep=o5fa9.1N4hhQfPB9IibIpwcB1O01E.cnSFLbyy6l8A06HG_HfwFw.W9RhUCAMY1ODNf.XnIZOXKURUadmEgh2hWmodp.xsjAuhh7TWMsbJX9sK9i29VvQ0xSe4cdrSE6_A4bge41SmJIhYL_2O5SpngB.2mz65BX5GlVj6o1c3HcK5u7WfjnxMqWpVOBMu9Yw88gWHan7yDln9QtLumfxM5gguyKaWLtzOsVTcG.z2hcf.kTwkS5zsIvbFIGDOAlFZBN2G355lyFKXG5Q4qayJrfl_lTJ5yOfZovydqmrK_c3RJtsHjcyL9kinTPqFKGuGDgGbkCmOW1_.988p6Fn_BZw..uOPJpCBqw7UDtuBDi7ZVQzsbYgI1nXJe9aP3YRY9kj8I21Aal2f5Qurjw95akRGYCGhktRhOG9kp8_Qb.6akhfr8sNDBmObQr4VBl7KP5qqTwz3ci.HDESJda0ZkK896Q1W3aFaf_Yv81Ow5t7HOYQlsLgoFsvGoUYTL_a3vKdGn2gauG7cCvrfsBTtKe3uXe_eKz45.qBOZ0Z4VBRPoFSRdALXSFW4mRiw1WVynsV1c_jgwTDAhJ1_LValeGW5YmIUsA73M87McfY69GMI0AsRtteQ3Yy20XluLX3dq1V8IAfTSIaL0z8lj_lMl33tgAL2SKCgTLN48icbSKVhf5kQVJA.CndcjVGVOj3TMmpFCr0.TtFqz2EL1VI4qzmJXIQegy4qunigng5yqkJ7XUmz6nWCsChUTcS6iUCdG.L5PKt701xaIWm.Yx5U99d4mUeGW_e.JXGFxEKtMUqjmmLf28dQcIWmMAzvbWOAP.DSTYnPIsndr4ia.aN1VB6sDw_13kNS9U3LZueUSjegR9lONffA2lR9oCKDY9CWbNVJ5vqjigyzHAgPjBRYFBNRWULUT_CKNVurvfv_WOtwWBv_jexdGEqtyAmw2CJI9oWvmP_wyZ6gvjcDHpqi7QAYXtIo0Rx3p8i6B4_YP8lxpljL3z0Kutw.XUSjDopPDNUKwYr.MpSSaWBcyB7fKwN58u6cUGGE2nYgF6.TbLecsiBBi9yq0y.n7Vwp5m_n77.sf1THf1m8Vs0w--&amp;a=12rLLhc_xD1wPPVB5g--&amp;s=Z2n3Gts5k2gaMg--&amp;t=HcTRQqJhwyu7&amp;ifa=VG8mDFM-&amp;cv_label=9fWBYQBN9g.U&amp;tpl_id=qnfPzi08&amp;tpl_path=VG8mDFM-&amp;ctv_optmz=4bAM5jY9&amp;disp_atime=OogdYkk9k2jBZ81ZuUDK&amp;vflg=4bAM5jY9&amp;C=9&amp;D=1&amp;F=0&amp;I=&amp;RI=7aff8d3fcf5ca8d7ba1ca38cb2b86266&amp;S=&amp;as=2&amp;etlid=0&amp;f=65536&amp;ff=1&amp;fq_d=1%2C1%2C1%2C0&amp;fq_m=1%2C2%2C2%2C0&amp;fq_w=1%2C1%2C1%2C0&amp;g=58&amp;lp=https%3A%2F%2Fh5.g123.jp%2Fgame%2Fvividarmy%3Fplatform%3Dydpcbp&amp;maf=31&amp;mid=5952946&amp;o=9&amp;p=9&amp;qfid=301968&amp;r=&amp;rfm=1_2&amp;sfid=301968&amp;skwid=0&amp;tlid=0&amp;u=toppage.yahoo.co.jp&amp;yads_ds=82399_6700&amp;v=2" target="_top" class="yjAdLink" data-ydntxt-item="1" style="display:block;">      <img src="./daab89faa7371d26b94ecbd6fba07e0d.jpg" border="0" width="600" height="600" style="width:100%; height:auto; max-width:350px; max-height:350px; display:block;" class="yjAdImage">    </a>    <div data-i="1" data-i-url="https://feedback.promotionalads.yahoo.co.jp/fdbk?p=ZscM8OAJPyiTS0JM4ELd.oU2OsIaOrutRnBZOWgK4HZJzGrr35h3e0D.IHG1JMQummRunHFE0_dWCo98bcVMVIn59okjkIlwg7OYu3V9LoCbl4vurQ--&amp;a1=ZNKYUeYLN2F10C0.UUAvkLd0F.2PYaKJU4ifRTrUaiA6gl2pTBj1od7N7qxkkH1sbvcAavSI4_vJuGH4RiYsfESSdsDDZSfh&amp;c=guP02pgePiyDrxpf3.KEarzqJkICoEC6&amp;u=u7ZYeRELNjkcL6j7OBWGXBfASCIAlkhjgL_6IZQgP2CJFK8ZDwGyrN3.lln_Eyhqa6uuv13wskecQ8ykatHZ&amp;t1=Qm9569gLNQO9Qg6PK3I0l5AASI.AZWEGIi9Y0GAd9jsCmree5_HW3cq4hSSqvmhLT5qFPqc0raNDiBnUncahJpZeXCLQ7Vlu_nTZ3hSPyBRWzSVC7C4D34bHBFeFfhhpyQZJI.CjtNLTsjAHhU0unIOn4iTvrjXGIt_NK6H4sy61e.xoS2GM1v7xM5wtcqeLMn6oDfKDL3pxm6gKF9k_T6TwxpNkYkzZIjnv3hvOYmk.Qw5eSCbcLnTZyjKQEQ--" data-i-linktarget="_top"><div class="i-ico" style="display: inline; position: absolute; background: transparent; border: none; float: none; width: auto; height: auto; margin: 0px; opacity: 1; padding: 0px; line-height: 1; font-size: inherit; font-weight: inherit; color: inherit; visibility: inherit; text-align: left; right: 0px; left: auto; top: -0.33px; bottom: auto; z-index: auto;"><a href="https://feedback.promotionalads.yahoo.co.jp/fdbk?p=ZscM8OAJPyiTS0JM4ELd.oU2OsIaOrutRnBZOWgK4HZJzGrr35h3e0D.IHG1JMQummRunHFE0_dWCo98bcVMVIn59okjkIlwg7OYu3V9LoCbl4vurQ--&amp;a1=ZNKYUeYLN2F10C0.UUAvkLd0F.2PYaKJU4ifRTrUaiA6gl2pTBj1od7N7qxkkH1sbvcAavSI4_vJuGH4RiYsfESSdsDDZSfh&amp;c=guP02pgePiyDrxpf3.KEarzqJkICoEC6&amp;u=u7ZYeRELNjkcL6j7OBWGXBfASCIAlkhjgL_6IZQgP2CJFK8ZDwGyrN3.lln_Eyhqa6uuv13wskecQ8ykatHZ&amp;t1=Qm9569gLNQO9Qg6PK3I0l5AASI.AZWEGIi9Y0GAd9jsCmree5_HW3cq4hSSqvmhLT5qFPqc0raNDiBnUncahJpZeXCLQ7Vlu_nTZ3hSPyBRWzSVC7C4D34bHBFeFfhhpyQZJI.CjtNLTsjAHhU0unIOn4iTvrjXGIt_NK6H4sy61e.xoS2GM1v7xM5wtcqeLMn6oDfKDL3pxm6gKF9k_T6TwxpNkYkzZIjnv3hvOYmk.Qw5eSCbcLnTZyjKQEQ--" target="_top" style="display: block; position: relative; background: none; border: none; float: none; width: 17px; height: 15px; margin: 0px; opacity: 1; padding: 0px; line-height: inherit; font-size: 11px; font-weight: inherit; color: inherit; top: auto; bottom: auto; left: auto; right: auto; visibility: inherit; cursor: pointer; text-decoration: none; overflow: hidden; transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1) 0s;"><span style="display: inline; position: absolute; border: none; float: none; width: 122.748px; height: 15px; margin: 0px 0px 0px -17px; padding: 0px; line-height: inherit; font-size: inherit; font-weight: inherit; color: inherit; top: auto; bottom: auto; left: auto; right: -105.748px; visibility: inherit; border-bottom-left-radius: 4px; background: rgb(255, 255, 255); opacity: 0.8; transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1) 0s;"></span><span style="display: block; position: absolute; background: none; border: none; float: none; width: 101.748px; height: 15px; margin: 0px; opacity: 1; padding: 0px; line-height: inherit; font-size: inherit; font-weight: inherit; color: inherit; top: auto; bottom: auto; visibility: inherit; overflow: hidden; right: 17px; left: auto;"><svg style="display: block; position: absolute; background: none; border: none; float: none; width: 99.7479px; height: 15px; margin: 0px; opacity: 1; padding: 0px; line-height: inherit; font-size: inherit; font-weight: inherit; color: inherit; top: auto; bottom: auto; left: auto; right: -122.748px; visibility: inherit; overflow: hidden; transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1) 0s;"><text y="12px" style="position: initial; background: none; border: none; float: none; width: auto; height: auto; margin: 0px; opacity: 1; padding: 0px; line-height: 17px; font-size: inherit; font-weight: inherit; color: rgb(0, 0, 0); top: auto; bottom: auto; left: auto; right: auto; visibility: inherit; font-family: sans-serif; text-decoration: none; vertical-align: middle; white-space: nowrap; overflow-wrap: normal;">Yahoo! JAPAN広告</text></svg></span><i style="display: inline; position: absolute; background: none; border: none; float: none; width: auto; height: auto; margin: 1px 2px; opacity: 1; padding: 0px; line-height: inherit; font-size: inherit; font-weight: inherit; color: inherit; top: auto; bottom: auto; visibility: inherit; right: 0px; left: auto;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="13" height="13"><image width="13" height="13" style="display:block;position:initial;background:none;border:none;float:none;width:auto;height:auto;margin:0;opacity:1;padding:0;line-height:inherit;font-size:inherit;font-weight:inherit;color:inherit;top:auto;bottom:auto;left:auto;right:auto;visibility:inherit;" href="data:image/svg+xml;charset=utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0D%0A%3C%21--%20Generator%3A%20Adobe%20Illustrator%2016.0.4%2C%20SVG%20Export%20Plug-In%20.%20SVG%20Version%3A%206.00%20Build%200%29%20%20--%3E%0D%0A%3C%21DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.0%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FTR%2F2001%2FREC-SVG-20010904%2FDTD%2Fsvg10.dtd%22%3E%0D%0A%3Csvg%20version%3D%221.0%22%20id%3D%22layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%0D%0A%09%20y%3D%220px%22%20width%3D%2213px%22%20height%3D%2213px%22%20viewBox%3D%220%200%2013%2013%22%20enable-background%3D%22new%200%200%2013%2013%22%20xml%3Aspace%3D%22preserve%22%3E%0D%0A%3Cg%3E%0D%0A%09%3Cpath%20fill%3D%22%23696969%22%20d%3D%22M6.5%2C13c0.685%2C0%2C1.328-0.267%2C1.811-0.75l3.94-3.938c0.999-0.999%2C0.999-2.624%2C0-3.622L8.311%2C0.75%0D%0A%09%09C7.828%2C0.267%2C7.185%2C0%2C6.5%2C0S5.172%2C0.267%2C4.688%2C0.75L0.749%2C4.689c-0.999%2C0.998-0.999%2C2.623%2C0%2C3.622l3.939%2C3.938%0D%0A%09%09C5.172%2C12.733%2C5.815%2C13%2C6.5%2C13z%20M6.498%2C6.135c-0.42%2C0-0.792%2C0.34-0.792%2C0.758v3.904c0%2C0.096-0.039%2C0.186-0.103%2C0.248%0D%0A%09%09c-0.064%2C0.064-0.153%2C0.104-0.25%2C0.104c-0.098%2C0-0.187-0.039-0.251-0.104L1.54%2C7.521c-0.562-0.563-0.562-1.478%2C0-2.04l3.94-3.939%0D%0A%09%09C5.752%2C1.27%2C6.115%2C1.119%2C6.5%2C1.119s0.747%2C0.15%2C1.02%2C0.422l3.94%2C3.939c0.562%2C0.562%2C0.562%2C1.477%2C0%2C2.04l-3.562%2C3.524%0D%0A%09%09c-0.064%2C0.064-0.153%2C0.104-0.251%2C0.104c-0.097%2C0-0.186-0.039-0.25-0.104c-0.063-0.062-0.104-0.152-0.104-0.248V6.893%0D%0A%09%09c0-0.418-0.371-0.758-0.79-0.758H6.498z%22%2F%3E%0D%0A%09%3Ccircle%20fill%3D%22%23696969%22%20cx%3D%226.5%22%20cy%3D%223.922%22%20r%3D%221.146%22%2F%3E%0D%0A%3C%2Fg%3E%0D%0A%3C%2Fsvg%3E"></image></svg></i></a></div></div>      </div></div></div><script id="yads_preloaded_js_29459303" type="text/javascript" src="./banner.min.js"></script><img src="./it" width="1" height="1" style="position:absolute;overflow:hidden;clip:rect(0 0 0 0);height:1px;width:1px;margin:-1px;padding:0;border:0;">
+
+</div>
+
+
+</body></html>

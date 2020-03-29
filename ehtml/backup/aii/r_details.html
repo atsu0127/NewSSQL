@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<!-- ピンチによる拡大・縮小 不可 -->
+<!-- <meta name="viewport" content="width=device-width, user-scalable=yes, maximum-scale=1.0, minimum-scale=1.0"> -->
+<!-- ピンチによる拡大・縮小 可 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AI Investments合同会社 | AI Investments合同会社では最新技術と自然との調和を目指します。">
+<meta name="keywords" content="">
+<title>AI Investments合同会社 | AI Investments合同会社では最新技術と自然との調和を目指します。</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen">
+<!--[if lt IE 9]>
+<script src="js/html5.js"></script>
+<script src="js/css3-mediaqueries.js"></script>
+<![endif]-->
+</head>
+<body>
+<!-- ヘッダー -->
+<div id="header">
+	<div class="inner">
+  
+  	<h1>AI Investments合同会社のサイトです</h1>
+
+		<!-- ロゴ -->
+		<div class="logo">
+			<a href="index.html">AI Investments合同会社<br><span>Company Slogan</span></a>
+		</div>
+		<!-- / ロゴ -->
+    
+    <!-- 電話番号+受付時間 -->
+		<div class="info">
+    	<p class="tel">電話: <strong>012-3456-7890</strong></p>
+			<p>受付時間: 平日 AM 10:00 〜 PM 5:00</p>
+    </div>
+		<!-- / 電話番号+受付時間 -->
+    
+
+
+  <!-- トップナビゲーション -->
+	<ul id="topnav">
+		<li class="active"><a href="index.html">トップページ<br><span>Top</span></a></li>
+<!-- 		<li><a href="subpage.html">ごあいさつ<br><span>Greeting</span></a></li> -->
+		<li><a href="subpage.html">サービス概要<br><span>Service</span></a></li>
+<!-- 		<li><a href="subpage.html">弊社の取り組み<br><span>Approach</span></a></li>
+		<li><a href="subpage.html">会社情報<br><span>Company</span></a></li> -->
+		<li><a href="subpage.html">お問い合わせ<br><span>Contact</span></a></li>
+	</ul>
+	<!-- トップナビゲーション -->
+  
+  </div>
+  
+</div>
+<!-- / ヘッダー -->
+
+<!-- メイン画像 -->
+<div id="mainBanner" class="mainImg">
+	<div class="inner">
+		<img src="images/mainImg.jpg" width="940" height="300" alt="">
+    <div class="slogan">
+			<h2>自然との調和を目指す企業です</h2>
+			<h3>革新的な技術で世の中を動かす企業を目指します。</h3>
+		</div>
+	</div>
+</div>
+<!-- / メイン画像 -->
+
+
+<div id="wrapper">
+
+	<div class="content gridWrapper">
+		<div style="font-size: x-large; color: red;">詳細</div>
+		<?php
+			// 画像のキャッシュ回避用
+			function d(){	
+			  return '?'.date("YmdHis");
+			}
+
+			// SSQL
+			require_once('./Ssql/ssql.php');
+			ssql_setConfig("./config.ssql");
+			$query1 = "
+				PARAMETER s.id
+				GENERATE HTML {
+				       [ {s.id||': '||s.d@{height=30, font-size=22, padding=5, align=center, color=gray} !
+				       	  '('||s.num_of_models||'モデルベース, '||s.name||')'@{height=30, font-size=18, padding=5, align=center, color=gray}
+				   		 }@{padding=15, align=center}!
+
+	 			         {{'サマリー'@{height=20, font-size=17, padding=2, align=center, color=#FFFFCC}}@{padding=8}!
+				          {
+				          	image(s.name||'/r_summary_total_b.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_summary_b.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_all-3_seikairitsu_b.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_all-1-2_seikairitsu_total_b.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_all-1-1_seikairitsu_term_b.png".d()."', './r')@{width=500, padding=3}
+				          }@{padding=3, align=center}
+				         }!
+
+
+				         {{'推移'@{height=20, font-size=17, padding=2, align=center, color=#99FFCC}}@{padding=8}!
+				          {
+				          	image(s.name||'/r_all3.png".d()."', './r')@{width=500, padding=3, align=center}
+				          }@{padding=3, align=center}
+				         }@{align=center}!
+
+		 		         {{'推移 年毎'@{height=20, font-size=17, padding=2, align=center, color=#FFCCFF}}@{padding=8}!
+				          {
+				          	image(s.name||'/r_all2_2017.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_all2_2018.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_all2_2019.png".d()."', './r')@{width=500, padding=3}
+				          }@{padding=3, align=center}
+				         }!
+
+
+				       	 {{'推移 月毎 まとめ'@{height=20, font-size=17, padding=2, align=center, color=#FFCCCC}}@{padding=8}!
+				          {
+				          	image(s.name||'/r_all.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_all_2017.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_all_2018.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_all_2019.png".d()."', './r')@{width=500, padding=3}
+				          }@{padding=3, align=center}
+				         }!
+
+				         {{'推移 月毎'@{height=20, font-size=17, padding=2, align=center, color=#0099FF}}@{padding=8}!
+				          {
+				          	image(s.name||'/r_2019-01.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_2019-02.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_2019-03.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_2019-04.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_2019-05.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_2019-06.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_2019-07.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_2019-08.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_2019-09.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_2019-10.png".d()."', './r')@{width=500, padding=3}
+				          }@{padding=3, align=center}
+				         }!
+
+
+	 			         {{'推移 その他'@{height=20, font-size=17, padding=2, align=center, color=gold}}@{padding=8}!
+				          {
+				          	image(s.name||'/r_all4_1w.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_all4_1m.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_all4_3m.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_all4_6m.png".d()."', './r')@{width=500, padding=3, align=center}!
+				          	image(s.name||'/r_all4_1y.png".d()."', './r')@{width=500, padding=3}
+				          }@{padding=3, align=center}
+				         }
+				        ]!
+				      } FROM stock_model s;
+			";
+			ssql_exec($query1);
+		?>
+	</div>
+</div>
+<!-- / WRAPPER -->
+
+
+<!-- フッター -->
+<div id="footer">
+	<div class="inner">
+    
+	<!-- 3カラム -->
+    <section class="gridWrapper">
+      
+			<article class="grid">
+      			<!-- ロゴ -->
+				<p class="logo"><a href="index.html">AI Investments<br /><span>Company Slogan</span></a></p>
+				<!-- / ロゴ -->
+			</article>
+      
+      <article class="grid col3">
+      	<ul>
+					<li><a href="subpage.html">eco・環境事業</a></li>
+					<li><a href="subpage.html">コンピュータ</a></li>
+					<li><a href="subpage.html">飲食店事業</a></li>
+					<li><a href="subpage.html">ごあいさつ</a></li>
+					<li><a href="subpage.html">サービス概要</a></li>
+					<li><a href="subpage.html">会社情報</a></li>
+					<li><a href="subpage.html">お問い合わせ</a></li>
+					<li><a href="subpage.html">サイトマップ</a></li>
+				</ul>
+      	<p>Copyright(c) 2019 AI Investments Inc. All Rights Reserved.</p>
+      </article>
+		
+    </section>
+	<!-- / 3カラム -->
+      
+	</div>
+</div>
+<!-- / フッター -->
+
+</body>
+</html>
