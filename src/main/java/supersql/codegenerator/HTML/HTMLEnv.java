@@ -46,7 +46,7 @@ public class HTMLEnv extends LocalEnv implements Serializable{
 	protected static int IDOld = 0; // add oka
 	public static String cond = "";
 	public static String bg = "";
-	public static String color = "";
+	public static String bgcolor = "";
 	public static String pos = "";
 	public ArrayList<ArrayList<String>> decorationProperty = new ArrayList<ArrayList<String>>();
 	public ArrayList<Boolean> decorationStartFlag = new ArrayList<Boolean>();
@@ -911,20 +911,20 @@ public class HTMLEnv extends LocalEnv implements Serializable{
         if (decos.containsKey("background"))
         	bg = decos.getStr("background");
 
-      //tbt add
-      	if(decos.containsKey("page-bgcolor") || decos.containsKey("pbgcolor")){
-      		if(decos.containsKey("page-bgcolor")){
-      			color = decos.getStr("page-bgcolor");
-      		}else{
-      			color = decos.getStr("pbgcolor");
-      		}
-      	}
+        //tbt add
+  		if(decos.containsKey("page-bgcolor")){
+  			bgcolor = decos.getStr("page-bgcolor");
+  		}else if(decos.containsKey("pbgcolor")){
+  			bgcolor = decos.getStr("pbgcolor");
+  		}
 
-      	if(decos.containsKey("table-align")){
+  		if(decos.containsKey("page-align")){
+  			pos = decos.getStr("page-align");
+  		}else if(decos.containsKey("palign")){
+  			pos = decos.getStr("palign");
+  		}else if(decos.containsKey("table-align")){
       		pos = decos.getStr("table-align");
-      	}
-
-      	if(decos.containsKey("talign")){
+      	}else if(decos.containsKey("talign")){
       		pos = decos.getStr("talign");
       	}
 
@@ -1186,7 +1186,9 @@ public class HTMLEnv extends LocalEnv implements Serializable{
 	public void header_creation() {
 		// tk start////////////////////////////////////////////////////
 		header.append(meta);
-		// masato
+
+		if (!title.equals(""))
+			header.append("<title>"+title+"</title>\n");
 
 		if (GlobalEnv.isAjax()) {
 			String js = GlobalEnv.getJsDirectory();
@@ -1269,8 +1271,8 @@ public class HTMLEnv extends LocalEnv implements Serializable{
 //	            body_css.append("body { background-image: url(../"+bg+"); }");
 				body_css.append("\tbackground-image: url(../"+bg+");\n");
 	        }
-			if(!color.equals("")){
-				body_css.append("\tbackground-color: "+color+";\n");
+			if(!bgcolor.equals("")){
+				body_css.append("\tbackground-color: "+bgcolor+";\n");
 			}
 			if(!pos.equals("")){
 				body_css.append("\ttext-align: "+pos+";\n");
@@ -1290,14 +1292,14 @@ public class HTMLEnv extends LocalEnv implements Serializable{
 			code_tmp += "<BODY class=\"body\">\n";
 			code_tmp += "<!-- SuperSQL Body  Start -->";
 			code_tmp += "<div id=\"ssql_body_contents\">\n";	//added by goto 20161019 for new foreach
-			if(!title.toString().trim().equals("")){
-				code_tmp += "<div";
-				code_tmp += div;
-				code_tmp += titleClass;
-				code_tmp += ">";
-				code_tmp += title;
-				code_tmp += "</div>";
-			}
+//			if(!title.toString().trim().equals("")){
+//				code_tmp += "<div";
+//				code_tmp += div;
+//				code_tmp += titleClass;
+//				code_tmp += ">";
+//				code_tmp += title;
+//				code_tmp += "</div>";
+//			}
 		}
 
 		if (Connector.loginFlag) {

@@ -62,6 +62,8 @@ public class Mobile_HTML5Env extends LocalEnv {
 
 	String title = "";		//added by goto 20130411  "title"
 	String bg = "";			//added by goto 20130311  "background"
+	String bgcolor = "";
+	String pos = "";
 	//    int maxWidth = 350;		//added by goto 20130512  "max-width"	Default:350
 	int portraitWidth = -1;		//added by goto 20130512  "max-width"	Default:-1
 	int landscapeWidth = -1;	//added by goto 20130512  "max-width"	Default:-1
@@ -355,29 +357,62 @@ public class Mobile_HTML5Env extends LocalEnv {
 			header.append(jsFile);		//added by goto 20130703
 
 			if(headerFlag == 1){
+				String s = "";
+				StringBuffer body_css = new StringBuffer();
+				StringBuffer uipage_css = new StringBuffer();
+				StringBuffer id_css = new StringBuffer();
+				
 				//added by goto 20130311  "background"
 				css.append("\n");
 				if (!bg.equals("")){
-					css.append(".ui-page{ background: transparent url(../"+bg+") }\n");
+					if(!Sass.isBootstrapFlg()){
+						uipage_css.append("\tbackground: transparent url(../"+bg+");\n");
+					}else{
+						if(!Ehtml.isEhtml2())
+							body_css.append("\tbackground-image: url("+bg+");\n");
+						else
+							id_css.append("\tbackground: url("+bg+");\n");
+					}
 				}
+				
+				if(!bgcolor.equals("")){
+					if(!Sass.isBootstrapFlg()){
+						uipage_css.append("\tbackground: "+bgcolor+";\n");
+					}else{
+						s = "\tbackground-color: "+bgcolor+" !important;\n";
+						if(!Ehtml.isEhtml2())
+							body_css.append(s);
+						else
+							id_css.append(s);
+					}
+				}
+				
 				//20130309  "div"
 				if(!Sass.isBootstrapFlg()){
-					css.append("div{ text-align:center; float:center; vertical-align:middle; }\n");
+					if(pos.equals(""))	pos = "center";		// Default align
+					
+					css.append("div{ text-align:"+pos+"; float:center; vertical-align:middle; }\n");
 					//20130315	"長い文字が...と省略されるのを防ぐ (*:全てのタイプに適用) "
 					css.append("* { white-space: normal; }\n");
 					css.append(".error{ color:red; text-align:left; display:block; } -->\n");
 					css.append(".ui-grid { overflow: hidden; }\n");
 					css.append(".ui-block { margin: 0; padding: 0; float: left; min-height: 1px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box; }\n");
 				}else if(Sass.isBootstrapFlg()){
-					//add tbt for centering
-//					if(!GlobalEnv.getCenteringflag()){
-					if(!GlobalEnv.getCenteringflag()){
+//					if(!pos.equals(""))	pos = "left";		// Default align
+					
+//					if(GlobalEnv.getCenteringflag()){
+					if(!pos.equals("")){
+						s = "\ttext-align:"+pos+"; float:center; vertical-align:middle;\n";
 						if (Ehtml.isEhtml2() && Ehtml.outType==1) 
-							css.append(Ehtml.getID(1)+"{ text-align:center; float:center; vertical-align:middle; }\n");
+							id_css.append(s);
 						else
-							css.append("body{ text-align:center; float:center; vertical-align:middle; }\n");
+							body_css.append(s);
 					}
 				}
+				
+				if(body_css.length() > 0)	css.insert(0,"body{\n"+body_css+"}\n");
+				if(uipage_css.length() > 0)	css.append(".ui-page{\n"+uipage_css+"}\n");
+				if(id_css.length() > 0)		css.append(Ehtml.getID(1)+"{\n"+id_css+"}\n");
 			}
 
 			header.append("<!-- Generated CSS -->\n");
@@ -1397,7 +1432,7 @@ public class Mobile_HTML5Env extends LocalEnv {
 			if(!Sass.isBootstrapFlg()){
 				header.append("<!-- data-role=content start -->\n<div data-role=\"content\" style=\"padding:0\" id=\"content1\">\n");
 			}
-			header.append("<div id=\""+((!Ehtml.isEhtml2())? "ssql_body_contents" : Ehtml.getID(0))+"\">\n");	//added by goto 20161019 for new foreach
+			header.append("<div id=\""+((!Ehtml.isEhtml2())? "ssql_body_contents" : Ehtml.getID(0))+"\"  class=\"\">\n");	//added by goto 20161019 for new foreach
 			if(Start_Parse.sessionFlag){
 				header.append("\n<div id=\"showValues\"><!-- ユーザ名等を表示 --></div>\n");	//ユーザ名
 			}
@@ -1882,6 +1917,24 @@ public class Mobile_HTML5Env extends LocalEnv {
 		//added by goto 20130311  "background"
 		if (decos.containsKey("background"))
 			bg = decos.getStr("background");
+		
+  		if(decos.containsKey("page-bgcolor")){
+  			bgcolor = decos.getStr("page-bgcolor");
+  		}else if(decos.containsKey("pbgcolor")){
+  			bgcolor = decos.getStr("pbgcolor");
+  		}
+      	
+  		if(decos.containsKey("page-align")){
+  			pos = decos.getStr("page-align");
+  		}else if(decos.containsKey("palign")){
+  			pos = decos.getStr("palign");
+  		}else if(decos.containsKey("table-align")){
+      		pos = decos.getStr("table-align");
+      	}else if(decos.containsKey("talign")){
+      		pos = decos.getStr("talign");
+      	}
+      	
+      	
 
 		//added by goto 20130512  "max-width"
 		try{
@@ -1947,7 +2000,7 @@ public class Mobile_HTML5Env extends LocalEnv {
 
 			String code = "";
 			code += "<html>\n<head>\n";
-			code += "<meta name=\"GENERATOR\" content=\" SuperSQL (Generate Mobile_HTML5) \">\n" +
+			code += "<meta name=\"GENERATOR\" content=\" SuperSQL (Generate "+((!Sass.isBootstrapFlg())? "Mobile_HTML5" : "ResponsiveHTML")+") \">\n" +
 					"<meta charset=\""+charset+"\">\n" +
 					"<title>"+fff.substring(fff.lastIndexOf("/")+1)+".ssql</title>\n" +
 					"\n" +

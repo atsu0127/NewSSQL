@@ -1181,15 +1181,14 @@ public class GlobalEnv {
 		}
 	}
 	//tbt add for centering
-	private static boolean centeringflag = false;
+//	private static boolean centeringflag = false;
 	private static String pos = new String();
-	public static void setCenteringflag() {
-		// TODO 自動生成されたメソッド・スタブ
-		centeringflag = true;
-	}
-	public static boolean getCenteringflag(){
-		return centeringflag;
-	}
+//	public static void setCenteringflag() {
+//		centeringflag = true;
+//	}
+//	public static boolean getCenteringflag(){
+//		return centeringflag;
+//	}
 
 	private static boolean detectcenteringflag = true;
 	public static void setDetectcenteringflag() {
