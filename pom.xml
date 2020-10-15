@@ -44,7 +44,7 @@
 			<artifactId>db2jcc</artifactId>
 			<version>1.0</version> <!-- Adjust this properly -->
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/db2jcc.jar</systemPath>
+			<systemPath>${project.basedir}/lib/db2jcc.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.antlr</groupId>
@@ -56,7 +56,7 @@
 			<artifactId>pdflib</artifactId>
 			<version>1.0</version> <!-- Adjust this properly -->
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/pdflib.jar</systemPath>
+			<systemPath>${project.basedir}/lib/pdflib.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.jgrapht</groupId>
@@ -134,7 +134,15 @@
 			<artifactId>JRI</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/JRI.jar</systemPath>
+			<systemPath>${project.basedir}/lib/JRI.jar</systemPath>
+		</dependency>
+		<dependency>
+			<!-- SQL server JDBC for Java8 -->
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>8.2.2.jre8</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/mssql-jdbc-8.2.2.jre8.jar</systemPath>
 		</dependency>
 	</dependencies>
 	<build>

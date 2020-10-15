@@ -323,6 +323,7 @@ public class SQLManager {
 		    		  //(driver.contains("mysql") ) ||	//TODO
 		    		  //(driver.contains("db2") ) ||	//TODO
 		    		  (driver.contains("sqlite") && errorContents[0].contains("column")))
+		    		  //||(driver.contains("sqlserver") )	//TODO
 		    		){
 			    	  if(errorContents[0].contains("ambiguous")){
 			    		  list = Suggest.getgetAmbiguousTableAndColumnNameList(conn, tableNameAndAlias.get(0), errorContents[1]);

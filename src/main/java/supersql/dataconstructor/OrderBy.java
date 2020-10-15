@@ -1,11 +1,12 @@
 package supersql.dataconstructor;
 
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import supersql.common.GlobalEnv;
 import supersql.common.Log;
 import supersql.extendclass.ExtList;
-import supersql.parser.Preprocessor;
 
 public class OrderBy {
 
@@ -276,12 +277,19 @@ public class OrderBy {
 	}
 
 	private boolean isNumeric(String target) {
+//		Pattern p = Pattern.compile("^\\d+(\\.\\d+)?$");
+		Pattern p = Pattern.compile("^-?\\d+(\\.\\d+)?$");
+        Matcher m = p.matcher(target);
+        if(!m.find()) {
+        		return false;
+        }
 
-		for (int i = 0; i < target.length(); i++) {
-			if (!((target.charAt(i) >= '0' && target.charAt(i) <= '9') || target.charAt(i) == '.')) {
-				return false;
-			}
-		}
+//		for (int i = 0; i < target.length(); i++) {
+//			if (!((target.charAt(i) >= '0' && target.charAt(i) <= '9') || target.charAt(i) == '.' )) {
+//
+//				return false;
+//			}
+//		}
 		return true;
 	}
 
